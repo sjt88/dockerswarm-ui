@@ -14,10 +14,8 @@ var express=require('express'),
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname,'app')));
 
-banner();
-
 dockerswarm(app);
 
 app.listen(3000,function(){
-  console.log('Server Listening ...');
+  banner();
 });
