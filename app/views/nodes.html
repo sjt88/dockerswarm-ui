@@ -6,25 +6,27 @@
           <h5>Nodes of cluster</h5>
         </div>
         <div class="ibox-content">
-          <table class="table table-sm" style="font-size:12px">
+          <table class="table table-hover table-bordered table-sm" style="font-size:12px">
             <thead>
               <tr>
+                <th>Status</th>
                 <th>Name</th>
                 <th>Host</th>
-                <th>Status</th>
                 <th>Containers</th>
                 <th>CPU</th>
                 <th>Memory</th>
+                <th>Update at</th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="node in nodes">
+                <td style="text-align:center"><a class="btn btn-primary btn-xs">{{node.status}}</a></td>
                 <td>{{node.name}}</td>
                 <td>{{node.host}}</td>
-                <td><a class="btn btn-primary btn-xs">{{node.status}}</a></td>
                 <td>{{node.containers}}</td>
                 <td>{{node.cpu}}</td>
                 <td>{{node.memory}}</td>
+                <td>{{node.update}}</td>
               </tr>
             </tbody>
           </table>
