@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html ng-app="dockerswarmUI">
+<head>
+  <meta charset="utf-8">
+  <title>DockerSwarm UI</title>
+  <link rel="stylesheet" href="bower_components/bootstrap-css/css/bootstrap.min.css" charset="utf-8">
+  <link rel="stylesheet" href="css/style.css" charset="utf-8">
+  <link rel="stylesheet" href="css/animate.css" charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="images/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="images/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="images/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="images/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="images/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="images/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="images/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="images/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="images/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+  <link rel="manifest" href="images/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="images/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+</head>
+<body style="background-color:#999C9E">
+
+  <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+      <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#/"><i class="fa fa-home"></i> </a>
+    </div>
+    <div ng-if="!isConnected">
+      <ul class="nav navbar-top-links navbar-right">
+        <li>
+          <span class="m-r-sm text-muted welcome-message">Welcome to DockerSwarm UI.</span>
+        </li>
+        <li>
+          <a href="#/nodes">
+            <i class="fa fa-cloud"></i> Nodes
+          </a>
+        </li>
+        <li>
+          <a href="#/containers">
+            <i class="fa fa-th-large"></i> Containers
+          </a>
+        </li>
+        <li>
+          <a href="#/images">
+            <i class="fa fa-picture-o"></i> Images
+          </a>
+        </li>
+      </ul>
+    </div>
+    </nav>
+
+    <div class="container-fluid" ng-view></div>
+  </body>
+  <script src="bower_components/jquery/dist/jquery.min.js" charset="utf-8"></script>
+  <script src="bower_components/bootstrap-css/js/bootstrap.min.js" charset="utf-8"></script>
+  <script src="bower_components/angular/angular.min.js" charset="utf-8"></script>
+  <script src="bower_components/angular-route/angular-route.min.js" charset="utf-8"></script>
+  <script src="bower_components/d3/d3.min.js" charset="utf-8"></script>
+  <script src="scripts/draw.js" charset="utf-8"></script>
+  <script src="scripts/app.js" charset="utf-8"></script>
+  <script src="scripts/services/dockerfactory.js" charset="utf-8"></script>
+  <script src="scripts/services/containerfactory.js" charset="utf-8"></script>
+  <script src="scripts/services/imagefactory.js" charset="utf-8"></script>
+  <script src="scripts/controllers/main.js" charset="utf-8"></script>
+  <script src="scripts/controllers/images.js" charset="utf-8"></script>
+  <script src="scripts/controllers/containers.js" charset="utf-8"></script>
+  <script src="scripts/controllers/nodes.js" charset="utf-8"></script>
+  </html>
