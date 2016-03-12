@@ -37,7 +37,7 @@ Report information such as Docker API, running/existed containers, Docker swarm 
 $ docker run -d -p 3000:3000 -v /var/run/docker.sock:/var/run/docker.sock --name dockerswarm-ui mlabouardy/dockerswarm-ui
 ```
 
-Open your browser to http://<dockerd host ip>:3000
+Open your browser to http://IP_ADDR:3000
 
 Bind mounting the Unix socket into the DockerUI container is much more secure than exposing your docker daemon over TCP.
 
