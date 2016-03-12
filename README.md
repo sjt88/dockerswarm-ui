@@ -33,10 +33,13 @@ Report information such as Docker API, running/existed containers, Docker swarm 
 
 ## Run
 
+```sh
 $ docker run -d -p 3000:3000 -v /var/run/docker.sock:/var/run/docker.sock --name dockerswarm-ui mlabouardy/dockerswarm-ui
+```
 
+```sh
 $ docker run -d -p 3000:3000 -e DOCKER_HOST=tcp://IP:2375 --name dockerswarm-ui mlabouardy/dockerswarm-ui
-
+```
 ## Contributors
 
 Mohamed Labouardy <mohamed@labouardy.com
