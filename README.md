@@ -31,11 +31,21 @@ Report information such as Docker API, running/existed containers, Docker swarm 
 
 <img src="preview/version.png" width="70%">
 
-## Run
+## Quickstart
 
 ```sh
 $ docker run -d -p 3000:3000 -v /var/run/docker.sock:/var/run/docker.sock --name dockerswarm-ui mlabouardy/dockerswarm-ui
 ```
+
+Open your browser to http://<dockerd host ip>:3000
+
+Bind mounting the Unix socket into the DockerUI container is much more secure than exposing your docker daemon over TCP.
+
+## Specify socket to connect to Docker daemon
+
+By default DockerUI connects to the Docker daemon with/var/run/docker.sock. For this to work you need to bind mount the unix socket into the container with -v /var/run/docker.sock:/var/run/docker.sock.
+
+You can use the -e flag to change this socket:
 
 ```sh
 $ docker run -d -p 3000:3000 -e DOCKER_HOST=tcp://IP:2375 --name dockerswarm-ui mlabouardy/dockerswarm-ui
