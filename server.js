@@ -5,11 +5,8 @@ var express=require('express'),
     path=require('path'),
     app=express();
 
-// Usage: dockerswarm-ui --DOCKER_HOST="unix:///var/run/docker.sock"
-//
-//   DOCKER_HOST DEFAULT["unix:///var/run/docker.sock"]
 
-// http://IP:2375/version
+app.set('DOCKER_HOST',process.env.DOCKER_HOST);
 
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname,'app')));

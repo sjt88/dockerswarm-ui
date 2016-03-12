@@ -13,6 +13,7 @@
           <thead>
             <tr>
               <th>Name</th>
+              <th>Node</th>
               <th>Image</th>
               <th>Created at</th>
               <th>Status</th>
@@ -21,9 +22,10 @@
           <tbody>
             <tr ng-repeat="container in containers">
               <td>{{container.Name}}</td>
+              <td><a class="btn btn-info btn-xs">{{container.Node}}</a></td>
               <td>{{container.Image}}</td>
               <td>{{container.Created}}</td>
-              <td><span class="btn btn-primary btn-xs">{{container.Status}}<span></td>
+              <td><span class="btn btn-primary btn-xs"><i class="fa fa-clock-o"></i> {{container.Status}}<span></td>
             </tr>
           </tbody>
         </table>

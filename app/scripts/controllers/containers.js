@@ -10,7 +10,12 @@ angular.module('dockerswarmUI')
       $scope.containers[i].Created=d.toLocaleString();
 
       var name=$scope.containers[i].Names[0];
-      $scope.containers[i].Name=name;
+      var c=name.slice(1,name.length);
+      var no=c.slice(0,c.indexOf('/'));
+      var co=c.slice(c.indexOf('/')+1,c.length);
+
+      $scope.containers[i].Name=co;
+      $scope.containers[i].Node=no;
 
     }
 
@@ -28,6 +33,6 @@ angular.module('dockerswarmUI')
 
 
   },function(){
-    // toastr.error('Server is not responding', 'Dockerboard');
+     toastr.error('Server is not responding', 'DockerSwarm UI');
   });
   });

@@ -1,0 +1,39 @@
+<div class="modal-header">
+  <h3 class="modal-title">Node Details</h3>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="form-group col-md-12">
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>
+              Label
+            </th>
+            <th>
+              Value
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="label in node.labels">
+            <td>
+              {{label.name}}
+            </td>
+            <td>
+              {{label.value}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="form-group col-md-12">
+      <label>Errors</label>
+      <textarea class="form-control" rows="3" ng-model="node.errors"/>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+  <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>
