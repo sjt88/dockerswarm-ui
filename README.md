@@ -34,7 +34,7 @@ Report information such as Docker API, running/existed containers, Docker swarm 
 ## Quickstart
 
 ```sh
-$ docker run -d -p 3000:3000 -v /var/run/docker.sock:/var/run/docker.sock --name dockerswarm-ui mlabouardy/dockerswarm-ui
+$ docker run -d -p 3000:3000 -v /var/run/docker.sock:/var/run/docker.sock --name dockerswarm-ui mlabouardy/dockerswarm-ui:1.0.0
 ```
 
 Open your browser to http://IP_ADDR:3000
@@ -48,7 +48,7 @@ By default DockerUI connects to the Docker daemon with/var/run/docker.sock. For 
 You can use the -e flag to change this socket:
 
 ```sh
-$ docker run -d -p 3000:3000 -e DOCKER_HOST=tcp://IP:2375 --name dockerswarm-ui mlabouardy/dockerswarm-ui
+$ docker run -d -p 3000:3000 -e DOCKER_HOST=tcp://IP:2375 --name dockerswarm-ui mlabouardy/dockerswarm-ui:1.0.0
 ```
 ## Contributors
 
