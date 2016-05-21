@@ -4,6 +4,10 @@ DockerSwarm UI gives you the ability to manage Docker resources including contai
 
 DockerSwarm UI is 100% compatible with the Docker Remote API and Docker Swarm API.
 
+## Update
+
+- Fixed issue of DockerSwarm 1.2.2
+
 ## Walkthrough
 
 1 - Containers

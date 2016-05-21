@@ -17,7 +17,6 @@ angular.module('dockerswarmUI')
 
   DockerFactory.infos().then(function(info){
     $scope.info=info.data;
-    console.log($scope.info.SystemStatus[3]);
   },function(){
     toastr.error('Server is not responding', 'DockerSwarm UI');
   });

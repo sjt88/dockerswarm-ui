@@ -1,4 +1,4 @@
-FROM node:4-onbuild
+FROM mlabouardy/nodejs
 MAINTAINER Mohamed Labouardy <mohamed@labouardy.com>
 
 ENV DOCKER_HOST unix:///var/run/docker.sock

@@ -8,19 +8,19 @@ angular.module('dockerswarmUI')
     var start=4;
     $scope.nodes=[];
     while(nbr>0){
-      var update_date = new Date(Date.parse(nodes[start+7][1]));
+      var update_date = new Date(Date.parse(nodes[start+8][1]));
       $scope.nodes.push({
         "name":nodes[start][0],
         "host":nodes[start][1],
-        "status":nodes[start+1][1],
-        "containers":nodes[start+2][1],
-        "cpu":nodes[start+3][1],
-        "memory":nodes[start+4][1],
-        "labels":nodes[start+5][1],
-        "errors":nodes[start+6][1],
+        "status":nodes[start+2][1],
+        "containers":nodes[start+3][1],
+        "cpu":nodes[start+4][1],
+        "memory":nodes[start+5][1],
+        "labels":nodes[start+6][1],
+        "errors":nodes[start+7][1],
         "update":update_date.toLocaleString()
       })
-      start+=8;
+      start+=10;
       nbr--;
     }
   },function(){
