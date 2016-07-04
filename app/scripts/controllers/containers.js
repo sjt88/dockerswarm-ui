@@ -1,8 +1,16 @@
+/* global angular */
 'use strict';
 
 angular.module('dockerswarmUI')
-  .controller('ContainersCtrl',function(ContainerFactory, $scope){
-    ContainerFactory.containers().then(function(containers){
+  .controller('ContainersCtrl', function(DockerFactory, ContainerFactory, $scope, $q){
+    $q.all([
+      ContainerFactory.containers(),
+      DockerFactory.infos()
+    ]).then(function(data){
+    var containers = data[0];
+    var info = data[1];
+    console.log(info);
+
     $scope.containers=containers.data;
     for(var i=0;i<$scope.containers.length;i++){
       var d = new Date(0);
@@ -19,11 +27,14 @@ angular.module('dockerswarmUI')
 
     }
 
+    info.data.SystemStatus.nodes
+
     containers=$scope.containers;
     var arr = [];
     for (var prop in containers) {
       arr.push(containers[prop]);
     }
+    console.log($scope.data);
     $scope.data={
       nodes:arr,
       links:[]

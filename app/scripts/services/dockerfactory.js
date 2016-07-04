@@ -69,6 +69,7 @@ angular.module('dockerswarmUI')
         return $q((resolve, reject) => {
           $http.get(SERVER+'/info').then(info => {
             info.data.SystemStatus = parseSystemStatus(info.data.SystemStatus);
+            console.log('resolving: ', info);
             resolve(info);
           }).catch(err => {
             reject(err);
