@@ -1,3 +1,6 @@
+/* global angular */
+'use strict';
+
 angular.module('dockerswarmUI')
   .factory('DockerFactory',function($http, $q){
     var SERVER='/api/v1';

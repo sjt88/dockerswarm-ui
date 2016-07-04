@@ -1,3 +1,4 @@
+/* global angular, toastr */
 'use strict';
 
 angular.module('dockerswarmUI')
@@ -32,5 +33,5 @@ angular.module('dockerswarmUI')
         }
       }
     });
-  }
+  };
 });
