@@ -1,19 +1,14 @@
-function drawGraph(containers) {
+function drawGraph(data) {
 
-
-
-  /*
-   * Example for FontAwesome
-   */
   var options = {
     groups: {
-      container: {
+      management: {
         shape: 'icon',
         icon: {
           face: 'FontAwesome',
-          code: '\uf13d',
-          size: 15,
-          color: '#57169a'
+          code: '\uf233',
+          size: 60,
+          color: '#23c6c8'
         }
       },
       node: {
@@ -21,71 +16,39 @@ function drawGraph(containers) {
         icon: {
           face: 'FontAwesome',
           code: '\uf233',
-          size: 30,
-          color: '#aa00ff'
+          size: 40,
+          color: '#1ab394'
         }
+      },
+      container_running: {
+        shape: 'icon',
+        icon: {
+          face: 'FontAwesome',
+          code: '\uf13d',
+          size: 20,
+          color: '#1ab394'
+        }
+      },
+      container_exited: {
+        shape: 'icon',
+        icon: {
+          face: 'FontAwesome',
+          code: '\uf13d',
+          size: 20,
+          color: '#ed5565'
+        }
+      }
+    },
+    physics: true,
+    nodes: {
+      font: {
+        strokeColor: '#f3f3f4',
+        strokeWidth: 5
       }
     }
   };
 
-  // create an array with nodes
-  var nodesFA = [{
-    id: 1,
-    label: 'User 1',
-    group: 'node'
-  }, {
-    id: 2,
-    label: 'User 2',
-    group: 'node'
-  }, {
-    id: 3,
-    label: 'Usergroup 1',
-    group: 'container'
-  }, {
-    id: 4,
-    label: 'Usergroup 2',
-    group: 'container'
-  }, {
-    id: 5,
-    label: 'Organisation 1',
-    group: 'container'
-  }, {
-    id: 6,
-    label: 'Usergroup 1',
-    group: 'container'
-  }, {
-    id: 7,
-    label: 'Usergroup 2',
-    group: 'container'
-  }];
-
-  // create an array with edges
-  var edges = [{
-    from: 1,
-    to: 3
-  }, {
-    from: 1,
-    to: 4
-  }, {
-    from: 1,
-    to: 5
-  }, {
-    from: 2,
-    to: 6
-  }, {
-    from: 2,
-    to: 7
-  }, {
-    from: 1,
-    to: 2
-  }];
-
-  // create a network
-  var containerFA = document.getElementById('canvas');
-  var dataFA = {
-    nodes: nodesFA,
-    edges: edges
-  };
-
-  var networkFA = new vis.Network(containerFA, dataFA, options);
+  // create the graph
+  var graphContainer = document.getElementById('canvas');
+  var graph = new vis.Network(graphContainer, data, options);
 }
