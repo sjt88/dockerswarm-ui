@@ -78,7 +78,8 @@ docker run -d \
 
 ## Contributors
 
-Mohamed Labouardy <mohamed@labouardy.com
+Mohamed Labouardy <mohamed@labouardy.com>
+Simon Tweed <simonjtweed@gmail.com>
 
 ## Help
 
