@@ -5,7 +5,7 @@ angular.module('dockerswarmUI')
 .controller('NodesCtrl',function(DockerFactory, $scope, $uibModal){
   DockerFactory.infos().then(function(info){
     $scope.nodes=[];
-    info.data.SystemStatus.nodes.forEach(node => {
+    info.data.SystemStatus.nodes.forEach(function (node) {
       $scope.nodes.push({
         name: node.name,
         host: node.host,

@@ -1,3 +1,4 @@
+/* global angular */
 'use strict';
 
 angular.module('dockerswarmUI',['ngRoute','ui.bootstrap'])
@@ -18,6 +19,10 @@ angular.module('dockerswarmUI',['ngRoute','ui.bootstrap'])
       .when('/nodes',{
         templateUrl:'views/nodes.html',
         controller:'NodesCtrl'
+      })
+      .when('/visualiser', {
+        templateUrl:'views/visualiser.html',
+        controller:'VisualiserCtrl'
       })
       .otherwise({redirectTo:'/'});
   });

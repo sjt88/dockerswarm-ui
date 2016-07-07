@@ -32,7 +32,7 @@ angular.module('dockerswarmUI')
       var parsedStatus = {};
 
       var nodeInfo = {}; // container for node information, populated for each node
-      systemStatus.forEach((line, index) => {
+      systemStatus.forEach(function (line, index) {
         let key = line[0];
         let value = line[1];
 
@@ -66,12 +66,11 @@ angular.module('dockerswarmUI')
 
     return {
       infos:function(){
-        return $q((resolve, reject) => {
-          $http.get(SERVER+'/info').then(info => {
+        return $q(function (resolve, reject) {
+          $http.get(SERVER+'/info').then(function (info) {
             info.data.SystemStatus = parseSystemStatus(info.data.SystemStatus);
-            console.log('resolving: ', info);
             resolve(info);
-          }).catch(err => {
+          }).catch(function (err) {
             reject(err);
           });
         });
