@@ -1,6 +1,5 @@
 /* global angular */
 'use strict';
-
 angular.module('dockerswarmUI',['ngRoute','ui.bootstrap'])
   .config(function($routeProvider){
     $routeProvider

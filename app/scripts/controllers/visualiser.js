@@ -3,9 +3,16 @@
 
 angular.module('dockerswarmUI')
 .controller('VisualiserCtrl', function(VisualiserFactory, $scope, $q, $routeParams){
-  console.log(VisualiserFactory);
+
+  $scope.models = {
+    groupingCheckboxes: {
+      imageName: false,
+      agents: false
+    }
+  };
+
   VisualiserFactory.graphData().then(function(data){
-    console.log(data);
+
     const graphOptions = {
       groups: {
         management: {
@@ -45,13 +52,28 @@ angular.module('dockerswarmUI')
           }
         }
       },
-      physics: true,
       nodes: {
         font: {
           strokeColor: '#f3f3f4',
           strokeWidth: 5
         }
-      }
+      },
+      edges: {
+        smooth: {
+          type: 'continuous'
+        }
+      },
+      layout: {
+        improvedLayout: true,
+      },
+      physics: {
+        solver: 'barnesHut',
+        barnesHut: {
+          avoidOverlap: 1,
+          centralGravity: -0.5,
+          damping: 1
+        }
+      },
     };
 
     $scope.settings = {
@@ -75,69 +97,146 @@ angular.module('dockerswarmUI')
     };
 
     $scope.refresh = function () {
-      console.log('refreshing graph');
+      $scope.groupings = {
+        imageName: [],
+        agents: []
+      };
       return VisualiserFactory.graphData().then(function (data) {
         $scope.setGraphData(data);
         $scope.graph.setData($scope.graphData);
       });
     };
 
-    $scope.groupData = function (groupers) {
+    $scope.toggleGrouping = function (groupers) {
       var data = JSON.stringify($scope.rawData);
       data = JSON.parse(data);
+      console.log($scope.models);
       groupers.forEach(function (modifier) {
-        $scope.groupers[modifier](data);
+        if ($scope.models.groupingCheckboxes[modifier]) {
+          $scope.groupers[modifier](data);
+        } else {
+          $scope.ungroupers[modifier](data);
+        }
       });
     };
 
-    $scope.groupings = {};
+    $scope.redraw = function () {
+      $scope.graph.redraw();
+    };
+
+    $scope.groupings = {
+      imageName: [],
+      agents: []
+    };
 
     $scope.groupers = {
       imageName: function (opts) {
+        if ($scope.groupings.agents.length > 0) opts.ignoreNodes = true;
+
         $scope.rawData.nodeNames.forEach(function (nodeName, ix) {
-          if (opts.ignoreNodes && ix > 0) return;
-          console.log('asdasdasd');
-          $scope.rawData.imageNames.forEach(function (imageName) {
+          // if nodes have already been grouped, return from all but the first element
+          // so we only produce a single group connected to the single swarm cluster node
+          if (opts && opts.ignoreNodes && ix > 0) return;
+          $scope.rawData.imageNames.forEach(function (imageName, ix2) {
+
             $scope.graph.cluster({
               joinCondition: function (nodeOptions) {
                 if (nodeOptions.data) {
-                  var nodeMatch = nodeOptions.data.node === nodeName;
-                  console.log(nodeOptions);
-                  console.log(opts.ignoreNodes);
-                  if (opts.ignoreNodes) nodeMatch = true;
+                  var nodeMatch; 
+                  if (opts && opts.ignoreNodes) nodeMatch = true;
+                  else nodeMatch = nodeOptions.data.node === nodeName;
+
                   var imageMatch = nodeOptions.data.image === imageName;
                   var join = nodeMatch && imageMatch;
                   return join;
                 }
               },
               processProperties: function (clusterOpts, childNodesOpts, childEdgesOptions) {
-                console.log(clusterOpts);
-                console.log(childNodesOpts);
-                console.log(childEdgesOptions);
-                var count = clusterOpts.count || 1;
-                return {label: imageName + ' (' + (count + 1) + ')', count: count + 1};
+                var count = 0;
+                // count all the children of this cluster
+                childNodesOpts.forEach(function (childNode) {
+                  if (childNode.count) {
+                    count += childNode.count;
+                  } else {
+                    count += 1;
+                  }
+                });
+
+                var id;
+                if (opts && opts.ignoreNodes) id = nodeName + '_' + imageName + '_cluster';
+                else id = id = nodeName + '_' + imageName + '_cluster_cluster';
+                $scope.groupings.imageName.push(id);
+                console.log(id);
+
+                var properties = {
+                  label: imageName + ' (' + count + ')', // <image name> (<container count>)
+                  count: count,
+                  data: {image: imageName},
+                  level: 2, // level for heirarchical layout
+                  id: id // id given to the cluster, we reference this when declustering
+                };
+                console.log(properties);
+                return properties;
               }
             });
+            $scope.graph.stabilize();
           });
         });
-        $scope.groupings.imageName = true;
-      },
-      containerName: function() {
       },
       agents: function () {
         var nodeProperties = graphOptions.groups.node;
-        nodeProperties.label = "Swarm Cluster";
+        var imagesWereGrouped = false;
+        if ($scope.groupings.imageName.length > 0) {
+          $scope.ungroupers.imageName();
+          imagesWereGrouped = true;
+        }
+
         $scope.graph.cluster({
           joinCondition: function (nodeOptions) {
             return nodeOptions.group === 'node' || nodeOptions.group === 'management';
           },
-          clusterNodeProperties: nodeProperties
+          processProperties: function (clusterOpts, childNodesOpts) {
+            var id = 'swarm_cluster';
+            $scope.groupings.agents.push(id);
+            nodeProperties.id = id;
+            nodeProperties.label = 'Swarm Cluster';
+            nodeProperties.level = 1;
+            return nodeProperties;
+          },
         });
-        if ($scope.groupings.imageName) {
-          console.log('grouping with ignored nodes');
+        if (imagesWereGrouped) {
           $scope.groupers.imageName({ignoreNodes: true});
         }
-        $scope.groupings.agents = true;
+        $scope.graph.stabilize();
+      }
+    };
+
+    $scope.ungroupers = {
+      imageName: function () {
+        console.log('ungrouping imageNames');
+        console.log($scope.groupings);
+        if ($scope.groupings.imageName) {
+          $scope.groupings.imageName.forEach(function (id) {
+            console.log(id);
+            $scope.graph.openCluster(id);
+          });
+          $scope.groupings.imageName = [];
+        }
+        $scope.graph.stabilize();
+      },
+      agents: function () {
+        if ($scope.groupings.agents) {
+          $scope.graph.openCluster('swarm_cluster');
+          $scope.groupings.agents = [];
+          var imagesWereGrouped = false;
+          if ($scope.groupings.imageName.length > 0) {
+            imagesWereGrouped = true;
+            $scope.ungroupers.imageName();
+            $scope.graph.stabilize();
+            $scope.groupers.imageName();
+          }
+        }
+        $scope.graph.stabilize();
       }
     };
 

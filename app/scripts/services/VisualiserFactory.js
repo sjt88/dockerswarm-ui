@@ -62,7 +62,6 @@ angular.module('dockerswarmUI')
       index++;
     });
 
-
     var images = [];
     for (var name in imageNameHash) {
       images.push(name);
