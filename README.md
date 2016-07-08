@@ -7,6 +7,7 @@ DockerSwarm UI is 100% compatible with the Docker Remote API and Docker Swarm AP
 ## Update
 
 - Fixed issue of DockerSwarm 1.2.2
+- Support for connecting to TLS secured
 
 ## Walkthrough
 
