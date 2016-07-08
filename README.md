@@ -54,9 +54,32 @@ You can use the -e flag to change this socket:
 ```sh
 $ docker run -d -p 3000:3000 -e DOCKER_HOST=tcp://IP:2375 --name dockerswarm-ui mlabouardy/dockerswarm-ui
 ```
+
+### Connecting to a TLS secured swarm
+
+The following environment variables can be set to connect to a TLS secured swarm manager:
+- DOCKER_TLS - set to true to use TLS
+- DOCKER_TLS_CERT - path to TLS certificate
+- DOCKER_TLS_KEY - path to private key
+- DOCKER_TLS_CACERT - path to ca chain certificate
+
+Run dockerswarm-ui as follows, remembering to mount your certificate folder as a volume:
+```
+docker run -d \ 
+-p 3000:3000 \
+-v /path/to/certs/:/certs \
+-e DOCKER_HOST=tcp://IP:2376 \
+-e DOCKER_TLS=true \
+-e DOCKER_TLS_CERT=/certs/cert.pem \
+-e DOCKER_TLS_KEY=/certs/key.pem \
+-e DOCKER_TLS_CACERT=/certs/ca.pem \
+--name dockerswarm-ui mlabouardy/dockerswarm-ui
+```
+
 ## Contributors
 
-Mohamed Labouardy <mohamed@labouardy.com
+Mohamed Labouardy <mohamed@labouardy.com>
+Simon Tweed <simonjtweed@gmail.com>
 
 ## Help
 
