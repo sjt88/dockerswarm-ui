@@ -92,6 +92,7 @@ angular.module('dockerswarmUI')
       var containers = data[0];
       var info = data[1];
       var newContainerData = [];
+      if (!imageNames) return [containers, info];
       containers.data.forEach(function(container, ix) {
         imageNames.forEach(function(imageName) {
           if (container.Image.indexOf(imageName) !== -1) {
@@ -135,6 +136,7 @@ angular.module('dockerswarmUI')
         }
       });
       containers.data = newContainerData;
+      console.log(containers.data);
       return [containers, info];
     }
   };

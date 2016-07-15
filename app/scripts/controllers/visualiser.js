@@ -79,29 +79,15 @@ angular.module('dockerswarmUI')
           enabled: false
         }
       },
-      layout: {
-        improvedLayout: true,
-      },
       physics: {
-        solver: 'forceAtlas2Based',
-        hierarchicalRepulsion: {
-          centralGravity: -0.5,
-          springLength: 100,
-          nodeDistance: 500
-        },
-        forceAtlas2Based: {
-          gravitationalConstant: -50,
-          centralGravity: 0.0015,
-          springLength: 120,
-          avoidOverlap: 0,
-          damping: 2
-        },
         stabilization: {
-          iterations: 1
+          enabled: false,
         },
-        minVelocity: 1.5,
-        maxVelocity: 10
-      },
+        barnesHut: {
+          avoidOverlap: 1,
+          springConstant: 0.01,
+        }
+      }
     };
 
     $scope.settings = {
@@ -126,17 +112,27 @@ angular.module('dockerswarmUI')
       var graphContainer = document.getElementById('canvas');
       $scope.graph = new vis.Network(graphContainer, graphData, graphOptions);
 
-      function fit() {
-        $scope.graph.fit({
-          animation: {easingFunction: 'easeInOutQuad'}
-        });
-      }
+      // function fit() {
+      //   $scope.graph.fit({
+      //     animation: {easingFunction: 'easeInOutQuad'}
+      //   });
+      // }
 
-      $scope.graph.on('stabilized', function () {
+      // $scope.graph.on('stabilized', function () {
+      //   setTimeout(function() {
+      //     fit();
+      //   }, 1)
+      // });
+      $scope.graph.on('stabilized', function() {
         setTimeout(function() {
-          fit();
-        }, 1)
-      });
+          $scope.graph.fit({
+            animation: {
+              easingFunction: 'linear',
+              duration: 100
+            }
+          });
+        }, 100)
+      })
     };
 
     /**
@@ -158,8 +154,10 @@ angular.module('dockerswarmUI')
         agents: []
       };
       return VisualiserFactory.graphData().then(function (data) {
-        $scope.setGraphData(data);
-        $scope.graph.setData($scope.graphData);
+        setTimeout(function() {
+          $scope.setGraphData(data);
+          $scope.graph.setData($scope.graphData);
+        }, 1)
       });
     };
 
@@ -171,7 +169,7 @@ angular.module('dockerswarmUI')
       if ($scope.models.filterInputs.radios !== '') {
         filterData.push({
             filterBy: $scope.models.filterInputs.radios,
-            filterValues: $scope.models.filterInputs.textbox
+            filterValues: $scope.models.filterInputs.textbox !== '' ? $scope.models.filterInputs.textbox : null
         });
       }
 
