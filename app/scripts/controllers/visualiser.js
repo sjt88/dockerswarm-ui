@@ -12,7 +12,10 @@ angular.module('dockerswarmUI')
       },
       filterInputs: {
         textbox: '',
-        radios: ''
+        radios: '',
+        checkboxes: {
+          activeOnly: false
+        }
       }
     };
     return models;
