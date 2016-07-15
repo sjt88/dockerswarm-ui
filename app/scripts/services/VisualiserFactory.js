@@ -123,6 +123,19 @@ angular.module('dockerswarmUI')
       });
       containers.data = newContainerData;
       return [containers, info];
+    },
+    containersRunning: function(data) {
+      var containers = data[0];
+      var info = data[1];
+      var newContainerData = [];
+      containers.data.forEach(function(container, ix) {
+        console.log(container);
+        if (container.State === 'running') {
+          newContainerData.push(container);
+        }
+      });
+      containers.data = newContainerData;
+      return [containers, info];
     }
   };
 
@@ -133,6 +146,7 @@ angular.module('dockerswarmUI')
    * @return {Object}        - getData() response with 
    */
   function filterMiddleware (filter, names) {
+    console.log(filter)
     return function (data) {
       if (typeof names === 'string') names = [names];
       return filters[filter](data, names);
@@ -147,8 +161,18 @@ angular.module('dockerswarmUI')
     graphData: function () {
       return getData().then(visJsFormatter);
     },
-    filteredGraphData: function(filterBy, filterValues) {
-      return getData().then(filterMiddleware(filterBy, filterValues)).then(visJsFormatter);
+    filteredGraphData: function(filters) {
+      // return getData().then(filterMiddleware(filterBy, filterValues)).then(visJsFormatter);
+      var middlewareChain = getData();
+      filters.forEach(function(data) {
+        console.log(data);
+        if (data.filterValues) {
+          middlewareChain = middlewareChain.then(filterMiddleware(data.filterBy, data.filterValues));
+        } else {
+          middlewareChain = middlewareChain.then(filterMiddleware(data.filterBy));
+        }
+      });
+      return middlewareChain.then(visJsFormatter);
     }
   };
 });

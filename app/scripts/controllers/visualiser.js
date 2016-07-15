@@ -152,12 +152,23 @@ angular.module('dockerswarmUI')
 
     $scope.filter = function() {
       console.log('filtering');
-      var filterValues = $scope.models.filterInputs.textbox;
-      var filterBy = $scope.models.filterInputs.radios;
+      // if (filterValues === '' || filterValues === ' ') return $scope.refresh();
 
-      if (filterValues === '' || filterValues === ' ') return $scope.refresh();
+      var filterData = [];
+      if ($scope.models.filterInputs.radios !== '') {
+        filterData.push({
+            filterBy: $scope.models.filterInputs.radios,
+            filterValues: $scope.models.filterInputs.textbox
+        });
+      }
 
-      VisualiserFactory.filteredGraphData(filterBy, filterValues).then(function(data) {
+      if ($scope.models.filterInputs.checkboxes.activeOnly) {
+        filterData.push({
+          filterBy: 'containersRunning',
+        });
+      }
+
+      VisualiserFactory.filteredGraphData(filterData).then(function(data) {
         $scope.setGraphData(data);
         $scope.graph.setData($scope.graphData);
         $scope.groupings = defaultGroupings();
