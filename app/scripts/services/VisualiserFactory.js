@@ -78,12 +78,38 @@ angular.module('dockerswarmUI')
     };
   }
 
+  const filters = {
+    imageNames: function(data, imageNames) {
+      var containers = data[0];
+      var info = data[1];
+      var newContainerData = [];
+      containers.data.forEach(function(container, ix) {
+        imageNames.forEach(function(imageName) {
+          if (container.Image === imageName) {
+            newContainerData.push(container);
+          }
+        });
+      });
+      console.log(newContainerData);
+      containers.data = newContainerData;
+      return [containers, info];
+    }
+  };
+
+
   return {
     info: function() {
       return getData();
     },
     graphData: function () {
       return getData().then(prepareVisJsData);
+    },
+    getGraphDataWithImageName: function(imageNames) {
+      return getData().then(function (data) {
+        if (typeof imageNames === 'string') imageNames = [imageNames];
+        console.log(imageNames)
+        return filters.imageNames(data, imageNames);
+      }).then(prepareVisJsData);
     }
   };
 });

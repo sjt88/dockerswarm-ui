@@ -5,9 +5,12 @@ angular.module('dockerswarmUI')
 .controller('VisualiserCtrl', function(VisualiserFactory, $scope, $q, $routeParams){
 
   $scope.models = {
-    groupingCheckboxes: {
+      groupingCheckboxes: {
       imageName: false,
       agents: false
+    },
+    filterInputs: {
+      imageName: ''
     }
   };
 
@@ -22,7 +25,7 @@ angular.module('dockerswarmUI')
             code: '\uf233',
             size: 60,
             color: '#23c6c8'
-          }
+          },
         },
         node: {
           shape: 'icon',
@@ -31,7 +34,7 @@ angular.module('dockerswarmUI')
             code: '\uf233',
             size: 40,
             color: '#1ab394'
-          }
+          },
         },
         container_running: {
           shape: 'icon',
@@ -40,7 +43,7 @@ angular.module('dockerswarmUI')
             code: '\uf13d',
             size: 20,
             color: '#1ab394'
-          }
+          },
         },
         container_exited: {
           shape: 'icon',
@@ -49,7 +52,7 @@ angular.module('dockerswarmUI')
             code: '\uf13d',
             size: 20,
             color: '#ed5565'
-          }
+          },
         }
       },
       nodes: {
@@ -67,10 +70,18 @@ angular.module('dockerswarmUI')
         improvedLayout: true,
       },
       physics: {
-        solver: 'hierarchicalRepulsion',
+        solver: 'forceAtlas2Based',
         hierarchicalRepulsion: {
-          centralGravity: -0.3
-        }
+          centralGravity: -0.5,
+          springLength: 100,
+          nodeDistance: 500
+        },
+        forceAtlas2Based: {
+          gravitationalConstant: -100,
+          centralGravity: 0.0015,
+          springLength: 100,
+          avoidOverlap: 0
+        },
       },
     };
 
@@ -79,22 +90,48 @@ angular.module('dockerswarmUI')
       group: $routeParams.group || {}
     };
 
-    // cache initial dataset
+    // create copy of initial dataset
     $scope.rawData = JSON.stringify(data);
     $scope.rawData = JSON.parse($scope.rawData);
 
-    $scope.graphData = data;
+    $scope.graphData = {
+      nodes: new vis.DataSet(data.nodes),
+      edges: new vis.DataSet(data.edges)
+    };
 
+     /**
+      * draws the network graph using data defined by graphData
+      * @param {object} graphData - vis.js network chart structured node/link data
+      */
     $scope.drawGraph = function (graphData) {
       var graphContainer = document.getElementById('canvas');
       $scope.graph = new vis.Network(graphContainer, graphData, graphOptions);
+
+      function fit() {
+        $scope.graph.fit({
+          animation: {easingFunction: 'easeInOutQuad'}
+        });
+      }
+
+      $scope.graph.on('stabilized', fit);
     };
 
+    /**
+     * Updates the network graph data (does not redraw the graph)
+     * @param {object} data - vis.js network chart structured node/link data
+     */
     $scope.setGraphData = function (data) {
       $scope.graphData = data;
     };
 
+    /**
+     * Refreshes the network graph using data in $scope.graphData
+     * @return $q
+     */
     $scope.refresh = function () {
+      for (var grouper in $scope.models.groupingCheckboxes) {
+        $scope.models.groupingCheckboxes[grouper] = false;
+      }
       $scope.groupings = {
         imageName: [],
         agents: []
@@ -105,6 +142,29 @@ angular.module('dockerswarmUI')
       });
     };
 
+    $scope.imageFilter = function() {
+      console.log('filtering');
+      var imageName = $scope.models.filterInputs.imageName;
+
+      if (imageName === '') return $scope.refresh();
+
+      VisualiserFactory.getGraphDataWithImageName(imageName).then(function(data) {
+        $scope.setGraphData(data);
+        $scope.graph.setData($scope.graphData);
+        for (var grouper in $scope.models.groupingCheckboxes) {
+          if ($scope.models.groupingCheckboxes[grouper]) {
+            // $scope.models.groupingCheckboxes[grouper] = [];
+            $scope.toggleGrouping([grouper]);
+          }
+        }
+      });
+    };
+
+    /**
+     * Toggles grouping with a defined set of grouping methods
+     * @param  {Array} groupers - ordered list of grouping method names to be invoked on the network graph data
+     *                            e.g. ['imageName', 'agents'] would group by image names then by agent
+     */
     $scope.toggleGrouping = function (groupers) {
       var data = JSON.stringify($scope.rawData);
       data = JSON.parse(data);
@@ -118,15 +178,19 @@ angular.module('dockerswarmUI')
       });
     };
 
-    $scope.redraw = function () {
-      $scope.graph.redraw();
-    };
-
+    // state of 
     $scope.groupings = {
       imageName: [],
       agents: []
     };
 
+    $scope.filters = {
+      imageName: function() {
+        
+      }
+    };
+
+    // methods for creating clusters of nodes on the visualiser 
     $scope.groupers = {
       imageName: function (opts) {
         if ($scope.groupings.agents.length > 0) opts.ignoreNodes = true;
@@ -134,7 +198,7 @@ angular.module('dockerswarmUI')
         $scope.rawData.nodeNames.forEach(function (nodeName, ix) {
           // if nodes have already been grouped, return from all but the first element
           // so we only produce a single group connected to the single swarm cluster node
-          if (opts && opts.ignoreNodes && ix > 0) return;
+          if ($scope.models.groupingCheckboxes.agents && ix > 0) return;
           $scope.rawData.imageNames.forEach(function (imageName, ix2) {
 
             $scope.graph.cluster({
@@ -177,14 +241,13 @@ angular.module('dockerswarmUI')
                 return properties;
               }
             });
-            $scope.graph.stabilize();
           });
         });
       },
       agents: function () {
         var nodeProperties = graphOptions.groups.node;
         var imagesWereGrouped = false;
-        if ($scope.groupings.imageName.length > 0) {
+        if ($scope.models.groupingCheckboxes.imageName) {
           $scope.ungroupers.imageName();
           imagesWereGrouped = true;
         }
@@ -205,10 +268,10 @@ angular.module('dockerswarmUI')
         if (imagesWereGrouped) {
           $scope.groupers.imageName({ignoreNodes: true});
         }
-        $scope.graph.stabilize();
       }
     };
 
+    // Methods for ungrouping clusters on the visualiser
     $scope.ungroupers = {
       imageName: function () {
         console.log('ungrouping imageNames');
@@ -220,7 +283,6 @@ angular.module('dockerswarmUI')
           });
           $scope.groupings.imageName = [];
         }
-        $scope.graph.stabilize();
       },
       agents: function () {
         if ($scope.groupings.agents) {
@@ -230,11 +292,9 @@ angular.module('dockerswarmUI')
           if ($scope.groupings.imageName.length > 0) {
             imagesWereGrouped = true;
             $scope.ungroupers.imageName();
-            $scope.graph.stabilize();
             $scope.groupers.imageName();
           }
         }
-        $scope.graph.stabilize();
       }
     };
 

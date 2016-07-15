@@ -7,25 +7,35 @@
                 </div>
                 <div class="ibox-content">
                     <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group col-sm-12">
-                                <h3>Grouping</h3>
-                                <label class="checkbox-inline"><input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="models.groupingCheckboxes.imageName" ng-click="toggleGrouping(['imageName'])">Image Name</label>
-                                <label class="checkbox-inline"><input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="models.groupingCheckboxes.agents" ng-click="toggleGrouping(['agents'])">Collapse Swarm Cluster</label>
+                        <div class="form-group col-sm-6">
+                            <h3>Grouping</h3>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="models.groupingCheckboxes.imageName" ng-click="toggleGrouping(['imageName'])">
+                                    Image Name
+                                </label>
                             </div>
-                            <div class="form-group col-sm-12">
-                                <label for="usr">Image Name</label>
-                                <input type="text" class="form-control" id="usr">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="models.groupingCheckboxes.agents" ng-click="toggleGrouping(['agents'])">
+                                    Collapse Swarm Cluster
+                                </label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                          <div class="btn-group col-sm-12">
-                              <button type="submit" class="btn btn-default btn-default" ng-click="refresh()">
-                                  <span class="fa fa-refresh" aria-hidden="true"></span> Reset
-                              </button>
-                          </div>
+                        <div class="col-sm-6">                        
+                            <h3>Filters</h3>
+                            <label for="usr">Image Name</label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" ng-model="models.filterInputs.imageName">
+                            </div>
+                            <div class="btn-group pull-right">
+                                <button type="submit" class="btn btn-default btn-default" ng-click="imageFilter()">
+                                    <span class="fa fa-refresh" aria-hidden="true"></span> Filter
+                                </button>
+                                <button type="submit" class="btn btn-default btn-default" ng-click="refresh()">
+                                    <span class="fa fa-refresh" aria-hidden="true"></span> Reset
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
