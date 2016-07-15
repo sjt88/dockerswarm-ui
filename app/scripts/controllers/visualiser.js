@@ -90,11 +90,17 @@ angular.module('dockerswarmUI')
           nodeDistance: 500
         },
         forceAtlas2Based: {
-          gravitationalConstant: -100,
+          gravitationalConstant: -50,
           centralGravity: 0.0015,
-          springLength: 100,
-          avoidOverlap: 0
+          springLength: 120,
+          avoidOverlap: 0,
+          damping: 2
         },
+        stabilization: {
+          iterations: 1
+        },
+        minVelocity: 1.5,
+        maxVelocity: 10
       },
     };
 
@@ -126,7 +132,11 @@ angular.module('dockerswarmUI')
         });
       }
 
-      $scope.graph.on('stabilized', fit);
+      $scope.graph.on('stabilized', function () {
+        setTimeout(function() {
+          fit();
+        }, 1)
+      });
     };
 
     /**
