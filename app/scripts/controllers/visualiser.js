@@ -60,18 +60,16 @@ angular.module('dockerswarmUI')
       },
       edges: {
         smooth: {
-          type: 'continuous'
+          enabled: false
         }
       },
       layout: {
         improvedLayout: true,
       },
       physics: {
-        solver: 'barnesHut',
-        barnesHut: {
-          avoidOverlap: 1,
-          centralGravity: -0.5,
-          damping: 1
+        solver: 'hierarchicalRepulsion',
+        hierarchicalRepulsion: {
+          centralGravity: -0.3
         }
       },
     };
