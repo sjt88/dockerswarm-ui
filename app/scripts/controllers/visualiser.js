@@ -4,15 +4,25 @@
 angular.module('dockerswarmUI')
 .controller('VisualiserCtrl', function(VisualiserFactory, $scope, $q, $routeParams){
 
-  $scope.models = {
+  function defaultModels() {
+    var models = {
       groupingCheckboxes: {
-      imageName: false,
-      agents: false
-    },
-    filterInputs: {
-      imageName: ''
-    }
-  };
+        imageName: false,
+        agents: false
+      },
+      filterInputs: {
+        textbox: '',
+        radios: ''
+      }
+    };
+    return models;
+  }
+
+  function resetModels() {
+    $scope.models = defaultModels();
+  }
+
+  $scope.models = defaultModels();
 
   VisualiserFactory.graphData().then(function(data){
 
@@ -129,9 +139,7 @@ angular.module('dockerswarmUI')
      * @return $q
      */
     $scope.refresh = function () {
-      for (var grouper in $scope.models.groupingCheckboxes) {
-        $scope.models.groupingCheckboxes[grouper] = false;
-      }
+      resetModels();
       $scope.groupings = {
         imageName: [],
         agents: []
@@ -142,18 +150,19 @@ angular.module('dockerswarmUI')
       });
     };
 
-    $scope.imageFilter = function() {
+    $scope.filter = function() {
       console.log('filtering');
-      var imageName = $scope.models.filterInputs.imageName;
+      var filterValues = $scope.models.filterInputs.textbox;
+      var filterBy = $scope.models.filterInputs.radios;
 
-      if (imageName === '') return $scope.refresh();
+      if (filterValues === '' || filterValues === ' ') return $scope.refresh();
 
-      VisualiserFactory.getGraphDataWithImageName(imageName).then(function(data) {
+      VisualiserFactory.filteredGraphData(filterBy, filterValues).then(function(data) {
         $scope.setGraphData(data);
         $scope.graph.setData($scope.graphData);
+        $scope.groupings = defaultGroupings();
         for (var grouper in $scope.models.groupingCheckboxes) {
           if ($scope.models.groupingCheckboxes[grouper]) {
-            // $scope.models.groupingCheckboxes[grouper] = [];
             $scope.toggleGrouping([grouper]);
           }
         }
@@ -178,17 +187,15 @@ angular.module('dockerswarmUI')
       });
     };
 
-    // state of 
-    $scope.groupings = {
-      imageName: [],
-      agents: []
-    };
+    function defaultGroupings() {
+      return {
+        imageName: [],
+        agents: []
+      };
+    }
 
-    $scope.filters = {
-      imageName: function() {
-        
-      }
-    };
+    // state of 
+    $scope.groupings = defaultGroupings();
 
     // methods for creating clusters of nodes on the visualiser 
     $scope.groupers = {

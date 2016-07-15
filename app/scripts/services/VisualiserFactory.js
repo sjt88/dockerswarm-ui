@@ -8,7 +8,7 @@ angular.module('dockerswarmUI')
     ]);
   }
 
-  function prepareVisJsData(data) {
+  function visJsFormatter(data) {
     var containers = data[0];
     var info = data[1];
 
@@ -78,14 +78,23 @@ angular.module('dockerswarmUI')
     };
   }
 
+  /**
+   * Methods for filtering getData() response
+   */
   const filters = {
+    /**
+     * Remove containers which are not running images with any name defined in imageNames
+     * @param  {Object} data       - getData() response
+     * @param  {Array} imageNames  - image names to filter containers by
+     * @return {Object}            - modified getData() response
+     */
     imageNames: function(data, imageNames) {
       var containers = data[0];
       var info = data[1];
       var newContainerData = [];
       containers.data.forEach(function(container, ix) {
         imageNames.forEach(function(imageName) {
-          if (container.Image === imageName) {
+          if (container.Image.indexOf(imageName) !== -1) {
             newContainerData.push(container);
           }
         });
@@ -93,8 +102,42 @@ angular.module('dockerswarmUI')
       console.log(newContainerData);
       containers.data = newContainerData;
       return [containers, info];
+    },
+    /**
+     * Remove containers which do not have names containing any values in containerNames
+     * @param  {Object} data       - getData() response
+     * @param  {Array} imageNames  - image names to filter containers by
+     * @return {Object}            - modified getData() response
+     */
+    containerNames: function(data, containerNames) {
+      var containers = data[0];
+      var info = data[1];
+      var newContainerData = [];
+      containers.data.forEach(function(container, ix) {
+        console.log(container)
+        containerNames.forEach(function(containerName) {
+          if (container.Name.indexOf(containerName) !== -1) {
+            newContainerData.push(container);
+          }
+        });
+      });
+      containers.data = newContainerData;
+      return [containers, info];
     }
   };
+
+  /**
+   * filtering middleware for manipulating getData() response before formatting
+   * @param  {String} filter - Name of filter to apply to the data
+   * @param  {Array} values  - Array of values to pass to the filter
+   * @return {Object}        - getData() response with 
+   */
+  function filterMiddleware (filter, names) {
+    return function (data) {
+      if (typeof names === 'string') names = [names];
+      return filters[filter](data, names);
+    }
+  }
 
 
   return {
@@ -102,14 +145,10 @@ angular.module('dockerswarmUI')
       return getData();
     },
     graphData: function () {
-      return getData().then(prepareVisJsData);
+      return getData().then(visJsFormatter);
     },
-    getGraphDataWithImageName: function(imageNames) {
-      return getData().then(function (data) {
-        if (typeof imageNames === 'string') imageNames = [imageNames];
-        console.log(imageNames)
-        return filters.imageNames(data, imageNames);
-      }).then(prepareVisJsData);
+    filteredGraphData: function(filterBy, filterValues) {
+      return getData().then(filterMiddleware(filterBy, filterValues)).then(visJsFormatter);
     }
   };
 });

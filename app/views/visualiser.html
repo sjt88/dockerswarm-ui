@@ -3,7 +3,10 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Visualizer</h5>
+                    <h5 class="panel-title">Visualizer</h5>
+                    <button type="button" class="btn btn-default btn-default pull-right" ng-click="refresh()" style="position:relative;top:-7.5px;margin-bottom:0px; padding:3px">
+                        <span class="fa fa-refresh" aria-hidden="true"></span> Reset
+                    </button>
                 </div>
                 <div class="ibox-content">
                     <div class="row">
@@ -11,40 +14,45 @@
                             <h3>Grouping</h3>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="models.groupingCheckboxes.imageName" ng-click="toggleGrouping(['imageName'])">
-                                    Image Name
+                                    <input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="models.groupingCheckboxes.imageName" ng-click="toggleGrouping(['imageName'])"> Image Name
                                 </label>
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="models.groupingCheckboxes.agents" ng-click="toggleGrouping(['agents'])">
-                                    Collapse Swarm Cluster
+                                    <input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="models.groupingCheckboxes.agents" ng-click="toggleGrouping(['agents'])"> Collapse Swarm Cluster
                                 </label>
                             </div>
                         </div>
-                        <div class="col-sm-6">                        
+                        <form class="col-sm-6">
                             <h3>Filters</h3>
-                            <label for="usr">Image Name</label>
-                            <div class="form-group">
-                                <input type="text" class="form-control" ng-model="models.filterInputs.imageName">
+                            <div class="form-group" ng-submit="filter()">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" ng-model="models.filterInputs.radios" value="imageNames">Image Name</label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" ng-model="models.filterInputs.radios" value="containerNames">Container Name</label>
+                                </div>
+                                <label>Filter Text</label>
+                                <input type="text" class="form-control" ng-model="models.filterInputs.textbox">
                             </div>
-                            <div class="btn-group pull-right">
-                                <button type="submit" class="btn btn-default btn-default" ng-click="imageFilter()">
-                                    <span class="fa fa-refresh" aria-hidden="true"></span> Filter
-                                </button>
-                                <button type="submit" class="btn btn-default btn-default" ng-click="refresh()">
-                                    <span class="fa fa-refresh" aria-hidden="true"></span> Reset
-                                </button>
-                            </div>
+                            <button type="submit" class="btn btn-default btn-default" ng-click="filter()">
+                                <span class="fa fa-refresh" aria-hidden="true"></span> Filter
+                            </button>
+                            <button type="submit" class="btn btn-default btn-default" ng-click="refresh()">
+                                <span class="fa fa-refresh" aria-hidden="true"></span> Clear
+                            </button>
+                        </form>
+                    </div>
+                    <hr></hr>
+                    <div class="row">
+                        <div class="col-lg-12" style="height:500px">
+                            <div id="canvas" style="width:100%;height:100%;background-color: #f3f3f4"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12" style="height:500px">
-            <div id="canvas" style="width:100%;height:100%;background-color: #f3f3f4"></div>
         </div>
     </div>
 </div>
