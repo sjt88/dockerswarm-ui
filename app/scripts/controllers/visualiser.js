@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('dockerswarmUI')
-.controller('VisualiserCtrl', function(VisualiserFactory, $scope, $q, $routeParams){
+.controller('VisualiserCtrl', function(VisualiserFactory, $scope, $q, $routeParams, $window){
 
   function defaultModels() {
     var models = {
@@ -16,7 +16,10 @@ angular.module('dockerswarmUI')
         checkboxes: {
           activeOnly: false
         }
-      }
+      },
+      mouseIsDown: false,
+      graphIsStabilizing: true,
+      adjustedPageHeight: ($window.innerHeight - 100) + 'px'
     };
     return models;
   }
@@ -24,6 +27,17 @@ angular.module('dockerswarmUI')
   function resetModels() {
     $scope.models = defaultModels();
   }
+
+
+  (function bindResizeEvents() {
+    var ix = 0;
+    angular.element($window).bind('resize', function () {
+      ix++;
+      console.log('resizing');
+      $scope.models.adjustedPageHeight = ($window.innerHeight - 100) + 'px';
+      $scope.$digest();
+    });
+  })();
 
   $scope.models = defaultModels();
 
@@ -79,15 +93,23 @@ angular.module('dockerswarmUI')
           enabled: false
         }
       },
+      layout: {
+        improvedLayout: false
+      },
       physics: {
         stabilization: {
-          enabled: false,
+          enabled: false
         },
+        solver: 'barnesHut',
         barnesHut: {
-          avoidOverlap: 1,
+          gravitationalConstant: -5000,
+          centralGravity: 0.01,
           springConstant: 0.01,
-        }
-      }
+          avoidOverlap: 0.01,
+        },
+        minVelocity: 2,
+        maxVelocity: 200
+      },
     };
 
     $scope.settings = {
@@ -124,15 +146,31 @@ angular.module('dockerswarmUI')
       //   }, 1)
       // });
       $scope.graph.on('stabilized', function() {
-        setTimeout(function() {
+
+        if ($scope.models.mouseIsDown) return;
+
+        if ($scope.models.graphIsStabilizing) {
           $scope.graph.fit({
             animation: {
               easingFunction: 'linear',
-              duration: 100
+              duration: 50
             }
           });
-        }, 100)
-      })
+          setTimeout(function () {
+            console.log('STABILIZING = FALSE');
+            $scope.$apply(function () {
+              $scope.models.graphIsStabilizing = false;
+            });
+          }, 51);
+        }
+      });
+
+      $scope.graph.on('startStabilizing', function () {
+        console.log('STABILIZING = TRUE');
+        // $scope.$apply(function () {
+        //   $scope.models.graphIsStabilizing = true;
+        // });
+      });
     };
 
     /**
@@ -154,14 +192,18 @@ angular.module('dockerswarmUI')
         agents: []
       };
       return VisualiserFactory.graphData().then(function (data) {
-        setTimeout(function() {
-          $scope.setGraphData(data);
-          $scope.graph.setData($scope.graphData);
-        }, 1)
+        $scope.setGraphData(data);
+        $scope.graph.setData($scope.graphData);
       });
     };
 
+    $scope.fit = function () {
+      $scope.graph.fit();
+    };
+
     $scope.filter = function() {
+      if ($scope.models.graphIsStabilizing) return;
+      $scope.models.graphIsStabilizing = true;
       console.log('filtering');
       // if (filterValues === '' || filterValues === ' ') return $scope.refresh();
 
@@ -197,6 +239,7 @@ angular.module('dockerswarmUI')
      *                            e.g. ['imageName', 'agents'] would group by image names then by agent
      */
     $scope.toggleGrouping = function (groupers) {
+      $scope.models.graphIsStabilizing = true;
       var data = JSON.stringify($scope.rawData);
       data = JSON.parse(data);
       console.log($scope.models);
@@ -264,7 +307,8 @@ angular.module('dockerswarmUI')
                   count: count,
                   data: {image: imageName},
                   level: 2, // level for heirarchical layout
-                  id: id // id given to the cluster, we reference this when declustering
+                  id: id, // id given to the cluster, we reference this when declustering
+                  mass: 1
                 };
                 console.log(properties);
                 return properties;
@@ -291,6 +335,7 @@ angular.module('dockerswarmUI')
             nodeProperties.id = id;
             nodeProperties.label = 'Swarm Cluster';
             nodeProperties.level = 1;
+            nodeProperties.mass = 1;
             return nodeProperties;
           },
         });

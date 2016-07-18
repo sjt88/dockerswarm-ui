@@ -1,15 +1,18 @@
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox float-e-margins">
+<div class="wrapper wrapper-content animated fadeInRight" style="height:100%">
+    <div class="row" style="height:100%">
+        <div class="col-lg-12" style="height:100%">
+            <div class="ibox float-e-margins"  style="height:100%">
                 <div class="ibox-title">
                     <h5 class="panel-title">Visualizer</h5>
-                    <button type="button" class="btn btn-default btn-default pull-right" ng-click="refresh()" style="position:relative;top:-7.5px;margin-bottom:0px; padding:3px">
+                    <button type="button" class="btn btn-default btn-default pull-right" ng-click="refresh()" style="position:relative;top:-7.5px;margin-bottom:0px; padding:3px 8px 3px 8px" ng-disabled="models.graphIsStabilizing">
                         <span class="fa fa-refresh" aria-hidden="true"></span> Reset
                     </button>
+                    <button type="button" class="btn btn-default btn-default pull-right" ng-click="fit()" style="position:relative;top:-7.5px;margin-bottom:0px; padding:3px 8px 3px 8px; margin-right: 2px">
+                        <span class="fa fa-expand" aria-hidden="true"></span> Fit
+                    </button>
                 </div>
-                <div class="ibox-content">
-                    <div class="row">
+                <div class="ibox-content" style="height:100%">
+                    <div class="row" style="height:100%">
                         <form class="col-lg-2 col-md-3 col-sm-3" ng-submit="filter()">
 
                             <h3>Grouping</h3>
@@ -51,11 +54,11 @@
                                 <input type="text" class="form-control" ng-model="models.filterInputs.textbox">
                             </div>
 
-                            <button type="submit" class="btn btn-default btn-default" ng-click="filter()">
+                            <button type="submit" class="btn btn-default btn-default" ng-click="filter()" ng-disabled="models.graphIsStabilizing">
                                 <span class="fa fa-filter" aria-hidden="true"></span> Filter
                             </button>
                         </form>
-                        <div class="col-lg-10 col-md-9 col-sm-9" style="height:500px">
+                        <div class="col-lg-10 col-md-9 col-sm-9" style="height:100%" ng-mousedown="models.mouseIsDown = true" ng-mouseup="models.mouseIsDown = false">
                             <div id="canvas" style="width:100%;height:100%;background-color: #f3f3f4"></div>
                         </div>
                     </div>
