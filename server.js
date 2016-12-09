@@ -23,6 +23,7 @@ if (process.env.DOCKER_TLS) {
   app.set('DOCKER_TLS_CERT', fs.readFileSync(process.env.DOCKER_TLS_CERT, options));
   app.set('DOCKER_TLS_KEY', fs.readFileSync(process.env.DOCKER_TLS_KEY, options));
   app.set('DOCKER_TLS_CACERT', fs.readFileSync(process.env.DOCKER_TLS_CACERT, options));
+  app.set('DOCKER_API_VERSION', process.env.DOCKER_API_VERSION);
 }
 
 app.use(logger('dev'));
