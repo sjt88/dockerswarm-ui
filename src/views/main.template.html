@@ -1,0 +1,61 @@
+<div class="col-md-4">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Containers
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <label>Running</label>
+                <span class="badge">{{info.ContainersRunning}}</span>
+            </li>
+            <li class="list-group-item">
+                <label>Stopped</label>
+                <span class="badge">{{info.ContainersStopped}}</span>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="col-lg-4">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Docker
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <label>Version:</label>
+                <span class="badge">{{version.Version}}</span>
+            </li>
+            <li class="list-group-item">
+                <label>API:</label>
+                <span class="badge">{{version.ApiVersion}}</span>
+            </li>
+            <li class="list-group-item">
+                <label>OS:</label>
+                <span class="badge">{{version.Os}}</span>
+            </li>
+            <li class="list-group-item">
+                <label>Arch:</label>
+                <span class="badge">{{version.Arch}}</span>
+            </li>
+            <li class="list-group-item">
+                <label>Kernel:</label>
+                <span class="badge">{{version.KernelVersion}}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Docker Swarm
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <label>Nodes:</label>
+                <span class="badge">{{info.SystemStatus.nodeCount}}</span>
+            </li>
+            <li class="list-group-item">
+                <label>Strategy:</label>
+                <span class="badge">{{info.SystemStatus.strategy}}</span>
+            </li>
+        </ul>
+    </div>
+</div>

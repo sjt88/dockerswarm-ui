@@ -1,0 +1,58 @@
+<div class="col-lg-12">
+    <div class="panel-body">
+        <div ng-show="!imagesAvailable()" class="alert alert-dismissible alert-danger">
+            <strong>Could not load Images!</strong>
+        </div>
+        <table ng-show="imagesAvailable()" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>
+                    <div class="form-group input-group">
+                            <span class="input-group-addon">Name</span>
+                            <input type="text" class="pull-right form-control" ng-model="keyword.name" />
+                    </div>
+                        </div>
+                    </th>
+                    <th>
+                    <div class="form-group input-group">
+                            <span class="input-group-addon">Tag</span>
+                            <input type="text" class="pull-right form-control" ng-model="keyword.tag" />
+                    </div>
+                        </div>
+                    </th>
+                    <th>
+                    <div class="form-group input-group">
+                            <span class="input-group-addon">Created</span>
+                            <input type="text" class="pull-right form-control" ng-model="keyword.created" />
+                    </div>
+                        </div>
+                    </th>
+                    <th>
+                    <div class="form-group input-group">
+                            <span class="input-group-addon">Size</span>
+                            <input type="text" ng-model="keyword.form-control" class="pull-right form-control " />
+                    </div>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="image in imageData| filter:{name: keyword.name, tags: keyword.tag, size: keyword.size, created: keyword.created} ">
+                    <td>{{image.name}}</td>
+                    <td>{{image.tags}}</td>
+                    <td>{{image.created}}</td>
+                    <td>
+                        <div ng-show="image.size> 500">
+                            <span class="btn btn-danger btn-xs">{{image.size | number:1}} Mb</span>
+                        </div>
+                        <div ng-show="image.size > 250 && image.size <= 500">
+                            <span class="btn btn-warning btn-xs">{{image.size | number:1}} Mb</span>
+                        </div>
+                        <div ng-show="image.size <= 250">
+                            <span class="btn btn-primary btn-xs">{{image.size | number:1}} Mb</span>
+                        </div>
+                        </td>
+                </tr>
+                </tbody>
+        </table>
+    </div>

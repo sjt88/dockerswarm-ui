@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --display-error-details",
-    "dev": "webpack --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "webpack-dev-server --content-base build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --progress --colors --watch"
   },
   "author": "mlabouardy <mohamed@labouardy.com> (http://labouardy.com)",
   "license": "ISC",
@@ -19,12 +20,22 @@
   },
   "devDependencies": {
     "angular": "^1.6.0",
+    "angular-toastr": "^2.1.1",
+    "angular-ui-bootstrap": "^2.3.1",
+    "angular-ui-router": "^0.3.2",
     "babel-core": "^6.20.0",
     "babel-loader": "^6.2.9",
     "babel-preset-es2015": "^6.18.0",
+    "bootswatch": "^3.3.7",
     "css-loader": "^0.26.1",
     "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0",
+    "html-loader": "^0.4.4",
+    "html-webpack-plugin": "^2.24.1",
+    "ngtemplate-loader": "^1.3.1",
     "style-loader": "^0.13.1",
-    "webpack": "^1.14.0"
+    "url-loader": "^0.5.7",
+    "webpack": "^1.14.0",
+    "webpack-dev-server": "^1.16.2"
   }
 }

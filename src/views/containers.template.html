@@ -1,0 +1,37 @@
+<div class="col-lg-12">
+    <table ng-show="containers" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    <i class="glyphicon glyphicon-text-color"></i> &nbsp;Name &nbsp;
+                    <input type="text" class="pull-right input-xs" ng-model="keyword.name" />
+                </th>
+                <th>
+                    <i class="glyphicon glyphicon-floppy-disk"></i> &nbsp;Node &nbsp;
+                    <input type="text" class="pull-right input-xs" ng-model="keyword.node" />
+                </th>
+                <th>
+                    <i class="glyphicon glyphicon-floppy-disk"></i> &nbsp;Image &nbsp;
+                    <input type="text" class="pull-right input-xs" ng-model="keyword.image" />
+                </th>
+                <th>
+                    <i class="glyphicon glyphicon-calendar"></i> &nbsp;Created &nbsp;
+                    <input type="text" ng-model="keyword.created" uib-datepicker-popup="MM/dd/yyyy" class="pull-right input-xs" ng-model="dt" is-open="popup.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                </th>
+                <th>
+                    <i class="glyphicon glyphicon-stats"></i> &nbsp;Status &nbsp;
+                    <input type="text" class="pull-right input-xs" ng-model="keyword.status" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="container in containers | filter: {Name: keyword.name, Node: keyword.node, Image: keyword.image, Created: keyword.created, Status: keyword.status }">
+                <td>{{container.Name}}</td>
+                <td><a class="btn btn-primary btn-xs">{{container.Node}}</a></td>
+                <td>{{container.Image}}</td>
+                <td>{{container.Created}}</td>
+                <td>{{container.Status}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
