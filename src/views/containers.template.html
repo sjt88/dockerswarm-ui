@@ -1,27 +1,43 @@
-<div class="col-lg-12">
-    <table ng-show="containers" class="table table-striped table-bordered">
+<div class="col-md-3">
+    <div class="panel">
+    <div class="panel-heading">
+      <h1 class="panel-title">
+        Search
+      </h1>
+    </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="control-label"> Name </label>
+                <input type="text" class="form-control input-sm" ng-model="keyword.name" />
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Node </label>
+                <input type="text" class="form-control input-sm" ng-model="keyword.node" />
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Image </label>
+                <input type="text" class="form-control input-sm" ng-model="keyword.image" />
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Created </label>
+                <input type="text" class="form-control input-sm" ng-model="keyword.created" />
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Status </label>
+                <input type="text" class="form-control input-sm" ng-model="keyword.status" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-9">
+    <table ng-show="containers" class="table table-bordered table-hover">
         <thead>
             <tr>
-                <th>
-                    <i class="glyphicon glyphicon-text-color"></i> &nbsp;Name &nbsp;
-                    <input type="text" class="pull-right input-xs" ng-model="keyword.name" />
-                </th>
-                <th>
-                    <i class="glyphicon glyphicon-floppy-disk"></i> &nbsp;Node &nbsp;
-                    <input type="text" class="pull-right input-xs" ng-model="keyword.node" />
-                </th>
-                <th>
-                    <i class="glyphicon glyphicon-floppy-disk"></i> &nbsp;Image &nbsp;
-                    <input type="text" class="pull-right input-xs" ng-model="keyword.image" />
-                </th>
-                <th>
-                    <i class="glyphicon glyphicon-calendar"></i> &nbsp;Created &nbsp;
-                    <input type="text" ng-model="keyword.created" uib-datepicker-popup="MM/dd/yyyy" class="pull-right input-xs" ng-model="dt" is-open="popup.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                </th>
-                <th>
-                    <i class="glyphicon glyphicon-stats"></i> &nbsp;Status &nbsp;
-                    <input type="text" class="pull-right input-xs" ng-model="keyword.status" />
-                </th>
+                <th> Name </th>
+                <th> Node </th>
+                <th> Image </th>
+                <th> Created </th>
+                <th> Status </th>
             </tr>
         </thead>
         <tbody>

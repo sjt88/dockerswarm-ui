@@ -13,6 +13,7 @@ module.exports = {
     loaders: [
       { test: /\.js$/, exclude: /node_modules/, loader: 'babel', query: { presets: ['es2015'] } },
       { test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader") },
+      {test: /\.scss$/, loaders: ["style-loader", "css-loader", "sass-loader"] },
       { test: /\.template\.html$/, loader: 'ngtemplate!html' },
       { test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
       { test: /\.png$/, loader: "url-loader?mimetype=image/png" },
