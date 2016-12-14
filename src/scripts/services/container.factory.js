@@ -26,5 +26,5 @@ function ContainerFactory($http) {
 
 module.exports = {
   name: 'ContainerFactory',
-  fn: ContainerFactory
+  fn: ['$http', ContainerFactory]
 };

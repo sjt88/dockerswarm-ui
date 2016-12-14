@@ -182,5 +182,5 @@ function VisualiserFactory (DockerFactory, ContainerFactory, $http, $q) {
 
 module.exports = {
   name: 'VisualiserFactory',
-  fn: VisualiserFactory
+  fn: ['DockerFactory', 'ContainerFactory', '$http', '$q', VisualiserFactory]
 };

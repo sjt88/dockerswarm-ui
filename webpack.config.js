@@ -5,7 +5,7 @@ const path = require('path');
 module.exports = {
   entry: './src/index.js',
   output: {
-    filename: 'app.js',
+    filename: 'app.min.js',
     path: './build',
     sourceMapFilename: '[file].map'
   },

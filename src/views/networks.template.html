@@ -1,0 +1,63 @@
+<div class="col-md-2">
+    <div class="panel">
+    <div class="panel-heading">
+      <h1 class="panel-title">
+        Search
+      </h1>
+    </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="control-label"> Name </label>
+                <input type="text" class="form-control input-sm" ng-model="keyword.name"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Scope </label>
+                <input type="text" class="form-control input-sm" ng-model="keyword.scope"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Internal </label>
+                <input type="text" class="form-control input-sm" ng-model="keyword.internal"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Driver </label>
+                <input type="text" class="form-control input-sm" ng-model="keyword.driver"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Containers </label>
+                <input type="text" class="form-control input-sm" ng-model="keyword.containers"/>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-10">
+    <table ng-show="networks.networks" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th> Name </th>
+                <th> Scope </th>
+                <th> Internal </th>
+                <th> Driver </th>
+                <th> Containers </th>
+                <th> ID (short) </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="network in networks.networks | filter: {
+                Name: keyword.name,
+                Scope: keyword.scope,
+                Driver: keyword.driver
+            }">
+                <td>{{ network.Name }}</td>
+                <td>{{ network.Scope }}</td>
+                <td>
+                    <i class="glyphicon glyphicon-ok" ng-show="network.Internal" ></i>
+                    <i class="glyphicon glyphicon-remove" ng-show="!network.Internal" ></i>
+                </td>
+                <td>{{ network.Driver }}</td>
+                <td><a class="btn btn-primary btn-xs">{{ network.containerCount }}</a></td>
+                <td>{{ network.shortId }}</td>
+                <td><a class="btn btn-danger btn-xs" ng-click="network.open($index)"><i class="fa fa-info-circle"></i> Details</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

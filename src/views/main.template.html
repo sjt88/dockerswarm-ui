@@ -6,11 +6,28 @@
         <ul class="list-group">
             <li class="list-group-item">
                 <label>Running</label>
-                <span class="badge">{{info.ContainersRunning}}</span>
+                <span class="badge">
+                    <span ng-class="{label:true, 'label-success': info.ContainersRunning > 0, 'label-danger': info.ContainerRunning <= 0}">
+                        {{info.ContainersRunning}}
+                    </span>
+                </span>
+            </li>
+            <li class="list-group-item">
+                <label>Paused</label>
+                <span class="badge">
+                    <span ng-class="{label:true, 'label-warning': info.ContainersPaused > 0, 'label-success': info.ContainersPaused <= 0}">
+                        {{info.ContainersPaused}}
+                    </span>
+                </span>
             </li>
             <li class="list-group-item">
                 <label>Stopped</label>
-                <span class="badge">{{info.ContainersStopped}}</span>
+                    </span>
+                <span class="badge">
+                    <span ng-class="{label:true, 'label-warning': info.ContainersStopped > 0, 'label-success': info.ContainersStopped <= 0}">
+                        {{info.ContainersStopped}}
+                    </span>
+                </span>
             </li>
         </ul>
     </div>

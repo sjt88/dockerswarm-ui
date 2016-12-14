@@ -1,7 +1,8 @@
-import mainTemplate from '../views/main.template.html';
-import imageTemplate from '../views/images.template.html';
+import mainTemplate       from '../views/main.template.html';
+import imageTemplate      from '../views/images.template.html';
 import containersTemplate from '../views/containers.template.html';
-import nodesTemplate from '../views/nodes.template.html';
+import nodesTemplate      from '../views/nodes.template.html';
+import networksTemplate   from '../views/networks.template.html';
 import visualiserTemplate from '../views/visualiser.template.html';
 
 function config($urlRouterProvider, $stateProvider, $locationProvider) {
@@ -37,10 +38,16 @@ function config($urlRouterProvider, $stateProvider, $locationProvider) {
       url: '/visualiser',
       templateUrl: visualiserTemplate,
       controller: 'VisualiserCtrl as visualiser'
+    },
+    {
+      name: 'networks',
+      url: '/networks',
+      templateUrl: networksTemplate,
+      controller: 'NetworksCtrl as networks'
     }];
 
     states.forEach(state => $stateProvider.state(state.name, state));
     $urlRouterProvider.otherwise('/');
 }
 
-module.exports = config;
+module.exports = ['$urlRouterProvider', '$stateProvider', '$locationProvider', config];

@@ -7,9 +7,6 @@ function ContainersCtrl(DockerFactory, ContainerFactory, $scope, $q, toastr) {
   .then(function(data) {
     var containers = data[0];
     var info = data[1];
-
-    console.log(JSON.stringify(containers));
-
     $scope.containers = containers.data;
   })
   .catch(err => {

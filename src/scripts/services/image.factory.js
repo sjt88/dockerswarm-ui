@@ -42,5 +42,5 @@ function ImageFactory($http) {
 
 module.exports = {
   name: 'ImageFactory',
-  fn: ImageFactory
+  fn: ['$http', ImageFactory]
 };

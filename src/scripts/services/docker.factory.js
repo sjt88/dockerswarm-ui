@@ -47,6 +47,10 @@ function DockerFactory($http, $q) {
         if (Object.keys(nodeInfo).length > 0) {
           // found a new node, so push the previous node info onto parsedNodes
           // & reset the nodeInfo object.
+          nodeInfo.labels = nodeInfo.labels.split(', ').map(label => {
+            return {name: label.split('=')[0], value: label.split('=')[1] };
+          });
+
           parsedNodes.push(nodeInfo);
           nodeInfo = {};
           if (index === systemStatus.length - 1) return;
@@ -57,20 +61,27 @@ function DockerFactory($http, $q) {
         // this element contains info about a node
         nodeInfo[key.substr(4, key.length).toLowerCase().split(' ').join('')] = value;
       }
+
     });
 
     parsedStatus.nodeCount = parsedStatus.nodes;
+    console.log('node 0', parsedNodes);
     delete parsedStatus.nodes;
     return Object.assign({ nodes: parsedNodes }, parsedStatus);
   }
 
   return {
     infos: function() {
-      return $http.get(SERVER + '/info').then(function(info) {
-        var key = 'SystemStatus';
-        if (!info.data[key]) key = 'DriverStatus';
-        info.data.SystemStatus = parseSystemStatus(info.data[key]);
-        return info;
+      return $q((resolve, reject) => {
+        $http.get(SERVER + '/info').then(function(info) {
+          var key = 'SystemStatus';
+          if (!info.data[key]) key = 'DriverStatus';
+          info.data.SystemStatus = parseSystemStatus(info.data[key]);
+          console.log('parsed docker info :', info);
+          return resolve(info);
+        }).catch(err => {
+          return reject(err);
+        });
       });
     },
     version: function() {
@@ -81,5 +92,5 @@ function DockerFactory($http, $q) {
 
 module.exports = {
   name: 'DockerFactory',
-  fn: DockerFactory
+  fn: ['$http', '$q', DockerFactory]
 };

@@ -1,4 +1,4 @@
-<div class="col-md-3">
+<div class="col-md-2">
     <div class="panel filter-panel">
     <div class="panel-heading">
       <h1 class="panel-title">
@@ -37,7 +37,7 @@
         </div>
     </div>
 </div>
-<div class="col-md-9">
+<div class="col-md-10">
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
@@ -61,7 +61,9 @@
               memory:     keyword.memory,
               update:     keyword.update
             }">
-                <td style="text-align:center"><a class="btn btn-primary btn-xs">{{node.status}}</a></td>
+                <td style="text-align:center">
+                    <span ng-class="{label:true, 'label-success': nodes.nodeIsHealthy($index), 'label-danger': !nodes.nodeIsHealthy($index)}">{{node.status}}</span>
+                </td>
                 <td>{{node.name}}</td>
                 <td>{{node.host}}</td>
                 <td>{{node.containers}}</td>
