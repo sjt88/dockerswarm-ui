@@ -1,6 +1,6 @@
 'use strict';
 
-function MainCtrl ($scope, DockerFactory, toastr){
+function MainCtrl ($scope, DockerService, toastr){
   console.log('main controller');
 
   toastr.options = {
@@ -10,13 +10,14 @@ function MainCtrl ($scope, DockerFactory, toastr){
     timeOut: 2000
   };
 
-  DockerFactory.infos().then(function(info){
+  DockerService.getInfo().then(function(info){
+    console.log('got info from docker service: ', info);
     $scope.info=info.data;
   },function(){
     toastr.error('Server is not responding', 'DockerSwarm UI');
   });
 
-  DockerFactory.version().then(function(version){
+  DockerService.version().then(function(version){
     $scope.version=version.data;
   },function(){
     toastr.error('Server is not responding', 'DockerSwarm UI');

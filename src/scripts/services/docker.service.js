@@ -1,9 +1,10 @@
 /* global angular */
 'use strict';
 
-function DockerFactory($http, $q) {
+function DockerService($http, $q) {
   var SERVER = '/api';
   console.log('docker factory');
+  this.store = {};
 
   /**
    * Parses <HTTP GET /info>.data.SystemStatus into an object
@@ -48,7 +49,7 @@ function DockerFactory($http, $q) {
           // found a new node, so push the previous node info onto parsedNodes
           // & reset the nodeInfo object.
           nodeInfo.labels = nodeInfo.labels.split(', ').map(label => {
-            return {name: label.split('=')[0], value: label.split('=')[1] };
+            return { name: label.split('=')[0], value: label.split('=')[1] };
           });
 
           parsedNodes.push(nodeInfo);
@@ -70,27 +71,69 @@ function DockerFactory($http, $q) {
     return Object.assign({ nodes: parsedNodes }, parsedStatus);
   }
 
-  return {
-    infos: function() {
-      return $q((resolve, reject) => {
-        $http.get(SERVER + '/info').then(function(info) {
-          var key = 'SystemStatus';
-          if (!info.data[key]) key = 'DriverStatus';
-          info.data.SystemStatus = parseSystemStatus(info.data[key]);
-          console.log('parsed docker info :', info);
-          return resolve(info);
-        }).catch(err => {
-          return reject(err);
-        });
+  function formatNodeInfo(node) {
+    console.log('formatting node info');
+    return {
+      name: node.name,
+      host: node.host,
+      status: node.status,
+      containers: node.containers,
+      cpu: node.reservedcpus,
+      memory: node.reservedmemory,
+      labels: node.labels,
+      errors: node.errors ? node.errors : null,
+      update: new Date(node.updatedat).toLocaleString()
+    };
+  }
+
+  function formatAllNodeInfo(info) {
+    console.log('formatting all node info');
+    console.log(info);
+    let nodeInfo = info.data.SystemStatus.nodes;
+    nodeInfo = nodeInfo.map(formatNodeInfo);
+    console.log('nodeinfo:');
+    console.log(nodeInfo);
+    return nodeInfo;
+  }
+
+  this.storeIsPopulated = () => {
+    return Object.keys(this.store).length > 0;
+  };
+
+  this.updateInfo = () => {
+    return $q((resolve, reject) => {
+      $http.get(SERVER + '/info').then(info => {
+        var key = 'SystemStatus';
+        if (!info.data[key]) key = 'DriverStatus';
+        info.data.SystemStatus = parseSystemStatus(info.data[key]);
+        info.data.SystemStatus.nodes = formatAllNodeInfo(info);
+        this.store = info;
+        console.log('parsed docker info :', info);
+        return resolve(info);
+      }).catch(err => {
+        return reject(err);
       });
-    },
-    version: function() {
-      return $http.get(SERVER + '/version');
-    }
+    });
+  };
+
+  /**
+   * Resolve with the contents of the store, or fetches info
+   * @return {Object} formatted docker /info response
+   */
+  this.getInfo = () => {
+    return $q(resolve => {
+      if (this.storeIsPopulated()) return resolve(this.store);
+
+      return resolve(this.updateInfo());
+    });
+  };
+
+  this.version = () => {
+    return $http.get(SERVER + '/version');
   };
 };
 
 module.exports = {
-  name: 'DockerFactory',
-  fn: ['$http', '$q', DockerFactory]
+  name: 'DockerService',
+  fn: ['$http', '$q', DockerService]
 };

@@ -3,35 +3,10 @@
 
 import detailTemplate from '../../views/nodes-detail.template.html';
 
-function NodesCtrl(ErrorsFactory, DockerFactory, $scope, $uibModal, toastr) {
+function NodesCtrl(ErrorsFactory, DockerService, $scope, $uibModal, toastr) {
   var vm = this;
 
   vm.nodes = [];
-
-  function formatNodeInfo(node) {
-    console.log('formatting node info');
-    return {
-      name: node.name,
-      host: node.host,
-      status: node.status,
-      containers: node.containers,
-      cpu: node.reservedcpus,
-      memory: node.reservedmemory,
-      labels: node.labels,
-      errors: node.errors ? node.errors : null,
-      update: new Date(node.updatedat).toLocaleString()
-    };
-  }
-
-  function formatAllNodeInfo(info) {
-    console.log('formatting all node info');
-    console.log(info);
-    let nodeInfo = info.data.SystemStatus.nodes;
-    nodeInfo = nodeInfo.map(formatNodeInfo);
-    console.log('nodeinfo:');
-    console.log(nodeInfo);
-    return nodeInfo;
-  }
 
   vm.open = function(i) {
     var detailModal = $uibModal.open({
@@ -51,10 +26,8 @@ function NodesCtrl(ErrorsFactory, DockerFactory, $scope, $uibModal, toastr) {
   vm.updateNodeInfo = () => {
     console.log('updating node info');
     console.log(vm);
-    DockerFactory.infos()
-      .then(info => {
-        vm.nodes = formatAllNodeInfo(info);
-      })
+    DockerService.getInfo()
+      .then(info => vm.nodes = info.data.SystemStatus.nodes)
       .then(() => console.log(vm))
       .catch(ErrorsFactory.throw);
   };
@@ -71,7 +44,7 @@ module.exports = {
   name: 'NodesCtrl',
   fn: [
     'ErrorsFactory',
-    'DockerFactory',
+    'DockerService',
     '$scope',
     '$uibModal',
     'toastr',

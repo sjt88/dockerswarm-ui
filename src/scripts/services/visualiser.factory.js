@@ -1,10 +1,10 @@
 
-function VisualiserFactory (DockerFactory, ContainerFactory, $http, $q) {
+function VisualiserFactory (DockerService, ContainerFactory, $http, $q) {
   
   function getData() {
     return $q.all([
       ContainerFactory.containers(),
-      DockerFactory.infos()
+      DockerService.getInfo()
     ]);
   }
 
@@ -182,5 +182,5 @@ function VisualiserFactory (DockerFactory, ContainerFactory, $http, $q) {
 
 module.exports = {
   name: 'VisualiserFactory',
-  fn: ['DockerFactory', 'ContainerFactory', '$http', '$q', VisualiserFactory]
+  fn: ['DockerService', 'ContainerFactory', '$http', '$q', VisualiserFactory]
 };

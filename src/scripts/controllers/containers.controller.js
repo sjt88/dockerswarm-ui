@@ -1,13 +1,18 @@
 /* global angular */
 'use strict';
 
-function ContainersCtrl(DockerFactory, ContainerFactory, $scope, $q, toastr) {
+import detailTemplate from '../../views/nodes-detail.template.html';
+
+function ContainersCtrl(DockerService, ContainerFactory, $uibModal, $scope, $q, toastr) {
   console.log('containers controller');
-  $q.all([ContainerFactory.containers(), DockerFactory.infos()])
+
+  var vm = this;
+
+  $q.all([ContainerFactory.containers(), DockerService.getInfo()])
   .then(function(data) {
     var containers = data[0];
     var info = data[1];
-    $scope.containers = containers.data;
+    vm.containers = containers.data;
   })
   .catch(err => {
     console.log(err);
@@ -16,6 +21,23 @@ function ContainersCtrl(DockerFactory, ContainerFactory, $scope, $q, toastr) {
       `${err.status} - ${err.data}`
     );
   });
+
+  vm.node = {
+    open: function(nodeName) {
+      var detailModal = $uibModal.open({
+        animation: true,
+        templateUrl: detailTemplate,
+        controller: 'DetailCtrl as nodeDetails',
+        size: 'lg',
+        resolve: {
+          node: function() {
+            console.log('opening info for node:', nodeName);
+            return nodeName;
+          }
+        }
+      });
+    }
+  };
 };
 
 module.exports = { name: 'ContainersCtrl', fn: ContainersCtrl };

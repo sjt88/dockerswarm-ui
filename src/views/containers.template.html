@@ -41,9 +41,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="container in containers | filter: {Name: keyword.name, Node: keyword.node, Image: keyword.image, Created: keyword.created, Status: keyword.status }">
+            <tr ng-repeat="container in containers.containers | filter: {Name: keyword.name, Node: keyword.node, Image: keyword.image, Created: keyword.created, Status: keyword.status }">
                 <td>{{container.Name}}</td>
-                <td><a class="btn btn-primary btn-xs">{{container.Node}}</a></td>
+                <td><a class="btn btn-primary btn-xs" ng-click="containers.node.open({name: container.Node})">{{container.Node}}</a></td>
                 <td>{{container.Image}}</td>
                 <td>{{container.Created}}</td>
                 <td>{{container.Status}}</td>

@@ -1,6 +1,6 @@
 'use strict';
 
-function DetailsCtrl ($scope,$uibModalInstance,node){
+function DetailsCtrl ($scope, DockerService, $uibModalInstance, node){
   console.log('detail Controller');
   var vm = this;
 
@@ -15,9 +15,15 @@ function DetailsCtrl ($scope,$uibModalInstance,node){
   vm.nodeIsHealthy = () => {
     return vm.node.status === 'Healthy';
   };
+
+  if (node.name) {
+    console.log('DockerService:');
+    console.log(DockerService);
+  }
+
 };
 
 module.exports = {
   name: 'DetailCtrl',
-  fn: ['$scope', '$uibModalInstance', 'node', DetailsCtrl]
+  fn: ['$scope', 'DockerService', '$uibModalInstance', 'node', DetailsCtrl]
 };
