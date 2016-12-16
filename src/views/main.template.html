@@ -6,27 +6,20 @@
         <ul class="list-group">
             <li class="list-group-item">
                 <label>Running</label>
-                <span class="badge">
-                    <span ng-class="{label:true, 'label-success': info.ContainersRunning > 0, 'label-danger': info.ContainerRunning <= 0}">
+                <span class="" ng-class="{'pull-right': true, label:true, 'label-success': info.ContainersRunning > 0, 'label-danger': info.ContainerRunning <= 0}">
                         {{info.ContainersRunning}}
-                    </span>
                 </span>
             </li>
             <li class="list-group-item">
                 <label>Paused</label>
-                <span class="badge">
-                    <span ng-class="{label:true, 'label-warning': info.ContainersPaused > 0, 'label-success': info.ContainersPaused <= 0}">
+                <span class="" ng-class="{'pull-right': true, label:true, 'label-warning': info.ContainersPaused > 0, 'label-success': info.ContainersPaused <= 0}">
                         {{info.ContainersPaused}}
-                    </span>
                 </span>
             </li>
             <li class="list-group-item">
                 <label>Stopped</label>
-                    </span>
-                <span class="badge">
-                    <span ng-class="{label:true, 'label-warning': info.ContainersStopped > 0, 'label-success': info.ContainersStopped <= 0}">
+                <span class="" ng-class="{'pull-right': true, label:true, 'label-warning': info.ContainersStopped > 0, 'label-success': info.ContainersStopped <= 0}">
                         {{info.ContainersStopped}}
-                    </span>
                 </span>
             </li>
         </ul>
@@ -40,23 +33,23 @@
         <ul class="list-group">
             <li class="list-group-item">
                 <label>Version:</label>
-                <span class="badge">{{version.Version}}</span>
+                <span class="pull-right label label-default">{{version.Version}}</span>
             </li>
             <li class="list-group-item">
                 <label>API:</label>
-                <span class="badge">{{version.ApiVersion}}</span>
+                <span class="pull-right label label-default">{{version.ApiVersion}}</span>
             </li>
             <li class="list-group-item">
                 <label>OS:</label>
-                <span class="badge">{{version.Os}}</span>
+                <span class="pull-right label label-default">{{version.Os}}</span>
             </li>
             <li class="list-group-item">
                 <label>Arch:</label>
-                <span class="badge">{{version.Arch}}</span>
+                <span class="pull-right label label-default">{{version.Arch}}</span>
             </li>
             <li class="list-group-item">
                 <label>Kernel:</label>
-                <span class="badge">{{version.KernelVersion}}</span>
+                <span class="pull-right label label-default">{{version.KernelVersion}}</span>
             </li>
         </ul>
     </div>
@@ -69,11 +62,11 @@
         <ul class="list-group">
             <li class="list-group-item">
                 <label>Nodes:</label>
-                <span class="badge">{{info.SystemStatus.nodeCount}}</span>
+                <span class="pull-right label label-default">{{info.SystemStatus.nodeCount}}</span>
             </li>
             <li class="list-group-item">
                 <label>Strategy:</label>
-                <span class="badge">{{info.SystemStatus.strategy}}</span>
+                <span class="pull-right label label-default">{{info.SystemStatus.strategy}}</span>
             </li>
         </ul>
     </div>

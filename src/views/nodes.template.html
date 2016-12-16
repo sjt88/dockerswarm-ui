@@ -48,7 +48,7 @@
                 <th>CPU</th>
                 <th>Reserved Memory</th>
                 <th>Updated at</th>
-                <th></th>
+                <th>Inspect</th>
             </tr>
         </thead>
         <tbody ng-show="nodes.nodes.length > 0">
@@ -70,7 +70,9 @@
                 <td>{{node.cpu}}</td>
                 <td>{{node.memory}}</td>
                 <td>{{node.update}}</td>
-                <td><a class="btn btn-danger btn-xs" ng-click="nodes.open($index)"><i class="fa fa-info-circle"></i> Details</a></td>
+                <td>
+                    <a class="btn btn-info btn-xs" ng-click="nodes.open($index)"><i class="glyphicon glyphicon-info-sign"></i> Details</a>
+                </td>
             </tr>
         </tbody>
     </table>

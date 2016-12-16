@@ -10,39 +10,39 @@
             <ul class="list-group">
                 <li class="list-group-item">
                     <label>Name</label>
-                    <span class="badge">{{ nodeDetails.node.name }}</span>
+                    <span class="pull-right label label-default">{{ nodeDetails.node.name }}</span>
                 </li>
                 <li class="list-group-item">
                     <label>Status</label>
-                    <span class="badge">
-                      <span ng-class="{
+                    <span ng-class="{
                         label: true,
+                        'pull-right': true,
+                        'label-default': true,
                         'label-success': nodeDetails.nodeIsHealthy(),
                         'label-danger': !nodeDetails.nodeIsHealthy()
-                      }">
+                    }">
                         {{ nodeDetails.node.status }}
-                      </span>
                     </span>
                 </li>
                 <li class="list-group-item">
                     <label>Host</label>
-                    <span class="badge">{{ nodeDetails.node.host }}</span>
+                    <span class="pull-right label label-default">{{ nodeDetails.node.host }}</span>
                 </li>
                 <li class="list-group-item">
                     <label>Containers</label>
-                    <span class="badge">{{ nodeDetails.node.containers }}</span>
+                    <span class="pull-right label label-default">{{ nodeDetails.node.containers }}</span>
                 </li>
                 <li class="list-group-item">
                     <label>CPU</label>
-                    <span class="badge">{{ nodeDetails.node.cpu }}</span>
+                    <span class="pull-right label label-default">{{ nodeDetails.node.cpu }}</span>
                 </li>
                 <li class="list-group-item">
                     <label>Memory</label>
-                    <span class="badge">{{ nodeDetails.node.memory }}</span>
+                    <span class="pull-right label label-default">{{ nodeDetails.node.memory }}</span>
                 </li>
                 <li class="list-group-item">
                     <label>Last Update</label>
-                    <span class="badge">{{ nodeDetails.node.update }}</span>
+                    <span class="pull-right label label-default">{{ nodeDetails.node.update }}</span>
                 </li>
             </ul>
         </div>
@@ -53,7 +53,7 @@
             <ul class="list-group">
                 <li class="list-group-item" ng-repeat="label in nodeDetails.node.labels">
                     <label>{{ label.name }}</label>
-                    <span class="badge">{{ label.value }}</span>
+                    <span class="pull-right label label-default">{{ label.value }}</span>
                 </li>
             </ul>
         </div>

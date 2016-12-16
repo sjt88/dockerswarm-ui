@@ -4,7 +4,7 @@ import StackTrace from 'stacktrace-js';
  * Error handling factory
  * @description Returns methods for error handling with improved stack traces
  */
-function ErrorsFactory () {
+function ErrorsService () {
   return {
     throw: err => {
       StackTrace.fromError(err).then(stack => {
@@ -16,6 +16,6 @@ function ErrorsFactory () {
 }
 
 module.exports = {
-  name: 'ErrorsFactory',
-  fn: ErrorsFactory
+  name: 'ErrorsService',
+  fn: ErrorsService
 };

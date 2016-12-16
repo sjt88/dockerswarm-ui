@@ -12,7 +12,7 @@ function MainCtrl ($scope, DockerService, toastr){
 
   DockerService.getInfo().then(function(info){
     console.log('got info from docker service: ', info);
-    $scope.info=info.data;
+    $scope.info=info;
   },function(){
     toastr.error('Server is not responding', 'DockerSwarm UI');
   });

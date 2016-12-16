@@ -1,9 +1,9 @@
 /* global angular, toastr */
 'use strict';
 
-import detailTemplate from '../../views/nodes-detail.template.html';
+import detailTemplate from '../../views/node-detail.template.html';
 
-function NodesCtrl(ErrorsFactory, DockerService, $scope, $uibModal, toastr) {
+function NodesCtrl(ErrorsService, DockerService, $scope, $uibModal, toastr) {
   var vm = this;
 
   vm.nodes = [];
@@ -26,10 +26,10 @@ function NodesCtrl(ErrorsFactory, DockerService, $scope, $uibModal, toastr) {
   vm.updateNodeInfo = () => {
     console.log('updating node info');
     console.log(vm);
-    DockerService.getInfo()
-      .then(info => vm.nodes = info.data.SystemStatus.nodes)
+    DockerService.getNodes()
+      .then(nodes => vm.nodes = nodes)
       .then(() => console.log(vm))
-      .catch(ErrorsFactory.throw);
+      .catch(ErrorsService.throw);
   };
 
   vm.nodeIsHealthy = (index) => {
@@ -43,7 +43,7 @@ function NodesCtrl(ErrorsFactory, DockerService, $scope, $uibModal, toastr) {
 module.exports = {
   name: 'NodesCtrl',
   fn: [
-    'ErrorsFactory',
+    'ErrorsService',
     'DockerService',
     '$scope',
     '$uibModal',

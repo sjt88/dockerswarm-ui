@@ -107,9 +107,9 @@ function DockerService($http, $q) {
         if (!info.data[key]) key = 'DriverStatus';
         info.data.SystemStatus = parseSystemStatus(info.data[key]);
         info.data.SystemStatus.nodes = formatAllNodeInfo(info);
-        this.store = info;
+        this.store = info.data;
         console.log('parsed docker info :', info);
-        return resolve(info);
+        return resolve(info.data);
       }).catch(err => {
         return reject(err);
       });
@@ -130,6 +130,14 @@ function DockerService($http, $q) {
 
   this.version = () => {
     return $http.get(SERVER + '/version');
+  };
+
+  this.getNodes = () => {
+    return $q(resolve => {
+      if (this.storeIsPopulated()) return resolve(this.store.SystemStatus.nodes);
+
+      return resolve(this.updateInfo().then(() => this.store.SystemStatus.nodes));
+    });
   };
 };
 

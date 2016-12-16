@@ -1,0 +1,84 @@
+<div class="modal-header">
+    <h3 class="modal-title">Container Details</h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="panel col-md-12">
+            <label>Summary</label>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <label>Name</label>
+                    <span class="pull-right">{{ containerDetails.container.Name }}</span>
+                </li>
+                <li class="list-group-item">
+                    <label>Status</label>
+                    <span ng-class="{
+                        label: true,
+                        'pull-right': true,
+                        'label-default': true,
+                        'label-warning': containerDetails.container.State.Restarting,
+                        'label-warning': containerDetails.container.State.Paused,
+                        'label-success': containerDetails.container.State.Running,
+                        'label-danger': containerDetails.container.State.Dead,
+                    }">
+                        {{ containerDetails.container.State.Status }}
+                    </span>
+                </li>
+                <li class="list-group-item">
+                    <label>Id</label>
+                    <span class="pull-right">{{ containerDetails.container.Id }}</span>
+                </li>
+                <li class="list-group-item">
+                    <label>Image Hash</label>
+                    <span class="pull-right">
+                        {{ containerDetails.container.Image }}
+                    </span>
+                </li>
+                <li class="list-group-item">
+                    <label>Created At</label>
+                    <span class="pull-right">
+                        {{ containerDetails.container.Created }}
+                    </span>
+                </li>
+                <li class="list-group-item">
+                    <label>Started At</label>
+                    <span class="pull-right">
+                        {{ containerDetails.container.State.StartedAt }}
+                    </span>
+                </li>
+                <li class="list-group-item">
+                    <label>Created</label>
+                    <span class="pull-right">
+                        {{ containerDetails.container.Args }}
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="panel col-md-12">
+            <div class="panel-heading">
+                <h1 class="panel-title">Network Settings</h1>
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <label>IP Address</label>
+                    <span class="pull-right">{{ containerDetails.container.NetworkSettings.IPAddress }}</span>
+                </li>
+                <li class="list-group-item">
+                    <label>Gateway</label>
+                    <span class="pull-right">{{ containerDetails.container.NetworkSettings.Gateway }}</span>
+                </li>
+                <li class="list-group-item">
+                    <label>MAC Address</label>
+                    <span class="pull-right">{{ containerDetails.container.NetworkSettings.MacAddress }}</span>
+                </li>
+                <li class="list-group-item">
+                    <label>Endpoint ID</label>
+                    <span class="pull-right">{{ containerDetails.container.NetworkSettings.EndpointID }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="containerDetails.close()">Close</button>
+</div>

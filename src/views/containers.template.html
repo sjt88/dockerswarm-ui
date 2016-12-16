@@ -1,10 +1,10 @@
 <div class="col-md-2">
     <div class="panel">
-    <div class="panel-heading">
-      <h1 class="panel-title">
+        <div class="panel-heading">
+            <h1 class="panel-title">
         Search
       </h1>
-    </div>
+        </div>
         <div class="panel-body">
             <div class="form-group">
                 <label class="control-label"> Name </label>
@@ -30,7 +30,7 @@
     </div>
 </div>
 <div class="col-md-10">
-    <table ng-show="containers" class="table table-bordered table-hover">
+    <table ng-show="containers" class="table table-striped">
         <thead>
             <tr>
                 <th> Name </th>
@@ -38,15 +38,26 @@
                 <th> Image </th>
                 <th> Created </th>
                 <th> Status </th>
+                <th> Inspect </th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="container in containers.containers | filter: {Name: keyword.name, Node: keyword.node, Image: keyword.image, Created: keyword.created, Status: keyword.status }">
-                <td>{{container.Name}}</td>
-                <td><a class="btn btn-primary btn-xs" ng-click="containers.node.open({name: container.Node})">{{container.Node}}</a></td>
+                <td>
+                    {{container.Name}}
+                </td>
+                <td>
+                    {{container.Node}}
+                    <a class="btn btn-default btn-xs pull-right" ng-click="containers.displayNodeDetail(container.Node)">
+                        <i class="glyphicon glyphicon-info-sign"></i>
+                    </a>
+                </td>
                 <td>{{container.Image}}</td>
                 <td>{{container.Created}}</td>
                 <td>{{container.Status}}</td>
+                <td>
+                    <a class="btn btn-info btn-xs" ng-click="containers.displayContainerDetail(container.Id)"><i class="glyphicon glyphicon-info-sign"></i> Details</a>
+                </td>
             </tr>
         </tbody>
     </table>

@@ -1,43 +1,65 @@
 /* global angular */
 'use strict';
 
-import detailTemplate from '../../views/nodes-detail.template.html';
+import nodeDetailTemplate      from '../../views/node-detail.template.html';
+import containerDetailTemplate from '../../views/container-detail.template.html';
 
-function ContainersCtrl(DockerService, ContainerFactory, $uibModal, $scope, $q, toastr) {
+function ContainersCtrl(ErrorsService, DockerService, ContainerService, $uibModal, $scope, $q, toastr) {
   console.log('containers controller');
 
   var vm = this;
 
-  $q.all([ContainerFactory.containers(), DockerService.getInfo()])
-  .then(function(data) {
-    var containers = data[0];
-    var info = data[1];
-    vm.containers = containers.data;
-  })
-  .catch(err => {
-    console.log(err);
-    toastr.error(
-      'Failed to retrieve container data',
-      `${err.status} - ${err.data}`
-    );
-  });
-
-  vm.node = {
-    open: function(nodeName) {
-      var detailModal = $uibModal.open({
-        animation: true,
-        templateUrl: detailTemplate,
-        controller: 'DetailCtrl as nodeDetails',
-        size: 'lg',
-        resolve: {
-          node: function() {
-            console.log('opening info for node:', nodeName);
-            return nodeName;
-          }
+  vm.displayNodeDetail = nodeName => {
+    var detailModal = $uibModal.open({
+      animation: true,
+      templateUrl: nodeDetailTemplate,
+      controller: 'DetailCtrl as nodeDetails',
+      size: 'lg',
+      resolve: {
+        node: function() {
+          console.log('opening info for node:', nodeName);
+          return DockerService.getNodes().then(nodes => {
+            console.log('nodes:', nodes);
+            console.log('nodeName: ' + nodeName);
+            let filtered = nodes.find(node => node.name == nodeName);
+            console.log(filtered);
+            return filtered;
+          }).catch(ErrorsService.throw);
         }
-      });
-    }
+      }
+    });
   };
+
+  function openContainerDetailModal (data) {
+    return $uibModal.open({
+      animation: true,
+      templateUrl: containerDetailTemplate,
+      controller: 'ContainerDetailCtrl as containerDetails',
+      size: 'lg',
+      resolve: {
+        container: data
+      }
+    });
+  }
+
+  vm.displayContainerDetail = containerName => {
+    ContainerService.getContainerInspectData(containerName)
+      .then(openContainerDetailModal)
+      .catch(ErrorsService.throw);
+  };
+
+  ContainerService.updateContainers()
+    .then(function(containers) {
+      var containers = containers;
+      vm.containers = containers;
+    })
+    .catch(err => {
+      toastr.error(
+        'Failed to retrieve container data',
+        `${err.status} - ${err.data}`
+      );
+      ErrorsService.throw(err);
+    });
 };
 
 module.exports = { name: 'ContainersCtrl', fn: ContainersCtrl };
