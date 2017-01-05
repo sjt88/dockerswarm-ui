@@ -1,11 +1,7 @@
 /* global angular */
 'use strict';
 
-function DockerService($http, $q) {
-  var SERVER = '/api';
-  console.log('docker factory');
-  this.store = {};
-
+function DockerService($http, $q, $interval) {
   /**
    * Parses <HTTP GET /info>.data.SystemStatus into an object
    * @param  {Array} </info>.data.SystemStatus
@@ -96,52 +92,80 @@ function DockerService($http, $q) {
     return nodeInfo;
   }
 
-  this.storeIsPopulated = () => {
-    return Object.keys(this.store).length > 0;
-  };
+  class Service {
+    constructor() {
+      this.SERVER = '/api';
+      this.store = {};
+      this.refreshInterval = null;
+      this.refreshIntervalDuration = 5000;
+    }
 
-  this.updateInfo = () => {
-    return $q((resolve, reject) => {
-      $http.get(SERVER + '/info').then(info => {
-        var key = 'SystemStatus';
-        if (!info.data[key]) key = 'DriverStatus';
-        info.data.SystemStatus = parseSystemStatus(info.data[key]);
-        info.data.SystemStatus.nodes = formatAllNodeInfo(info);
-        this.store = info.data;
-        console.log('parsed docker info :', info);
-        return resolve(info.data);
-      }).catch(err => {
-        return reject(err);
+    storeIsPopulated() {
+      return Object.keys(this.store).length > 0;
+    };
+
+    updateInfo() {
+      return $q((resolve, reject) => {
+        $http.get(this.SERVER + '/info').then(info => {
+          var key = 'SystemStatus';
+          if (!info.data[key]) key = 'DriverStatus';
+          info.data.SystemStatus = parseSystemStatus(info.data[key]);
+          info.data.SystemStatus.nodes = formatAllNodeInfo(info);
+          this.store = info.data;
+          console.log('parsed docker info :', info);
+
+          return resolve(this.store);
+        }).catch(err => {
+          return reject(err);
+        });
       });
-    });
-  };
+    };
 
-  /**
-   * Resolve with the contents of the store, or fetches info
-   * @return {Object} formatted docker /info response
-   */
-  this.getInfo = () => {
-    return $q(resolve => {
-      if (this.storeIsPopulated()) return resolve(this.store);
+    /**
+     * Resolve with the contents of the store, or fetches info
+     * @return {Object} formatted docker /info response
+     */
+    getInfo() {
+      return this.updateInfo();
+    };
 
-      return resolve(this.updateInfo());
-    });
-  };
+    version() {
+      return $http.get(SERVER + '/version');
+    };
 
-  this.version = () => {
-    return $http.get(SERVER + '/version');
-  };
+    /**
+     * Sets the time between updates
+     * @param  {Number} interval
+     */
+    setRefreshIntervalDuration(interval) {
+      this.refreshIntervalDuration = interval;
+    };
 
-  this.getNodes = () => {
-    return $q(resolve => {
-      if (this.storeIsPopulated()) return resolve(this.store.SystemStatus.nodes);
 
-      return resolve(this.updateInfo().then(() => this.store.SystemStatus.nodes));
-    });
-  };
-};
+    /**
+     * Starts automatic updates
+     * @param  {Number} interval
+     */
+    startRefreshInterval(cb) {
+      if (this.refreshInterval) this.stopRefreshInterval();
+
+      console.log('updating nodesin ' + this.refreshIntervalDuration + ' seconds');
+
+      return $interval(() => {
+        console.log(this.refreshIntervalDuration + 'seconds passed...');
+        console.log('updating now');
+        console.log(this.store.SystemStatus.nodes);
+        this.updateInfo().then(() => {
+          if (cb) cb();
+        });
+      }, this.refreshIntervalDuration);
+    };
+  }
+
+  return new Service();
+}
 
 module.exports = {
   name: 'DockerService',
-  fn: ['$http', '$q', DockerService]
+  fn: ['$http', '$q', '$interval', DockerService]
 };

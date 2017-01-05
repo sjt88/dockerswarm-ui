@@ -3,10 +3,11 @@
 
 import detailTemplate from '../../views/node-detail.template.html';
 
-function NodesCtrl(ErrorsService, DockerService, $scope, $uibModal, toastr) {
+function NodesCtrl($scope, ErrorsService, DockerService, $uibModal, $interval, toastr) {
   var vm = this;
-
+  vm.isSearchCollapsed = true;
   vm.nodes = [];
+  vm.keyword = {};
 
   vm.open = function(i) {
     var detailModal = $uibModal.open({
@@ -26,9 +27,8 @@ function NodesCtrl(ErrorsService, DockerService, $scope, $uibModal, toastr) {
   vm.updateNodeInfo = () => {
     console.log('updating node info');
     console.log(vm);
-    DockerService.getNodes()
-      .then(nodes => vm.nodes = nodes)
-      .then(() => console.log(vm))
+    return DockerService.getInfo()
+      .then(vm.applyNodes)
       .catch(ErrorsService.throw);
   };
 
@@ -36,17 +36,27 @@ function NodesCtrl(ErrorsService, DockerService, $scope, $uibModal, toastr) {
     return vm.nodes[index].status === 'Healthy';
   };
 
-  vm.updateNodeInfo();
+  vm.applyNodes = nodes => {
+    this.nodes = DockerService.store.SystemStatus.nodes;
+  };
 
+  vm.updateNodeInfo().then(() => {
+    vm.nodeRefreshInterval = DockerService.startRefreshInterval(vm.applyNodes);
+  });
+
+  $scope.$on('$destroy', () => {
+    $interval.cancel(vm.nodeRefreshInterval);
+  });
 };
 
 module.exports = {
   name: 'NodesCtrl',
   fn: [
+    '$scope',
     'ErrorsService',
     'DockerService',
-    '$scope',
     '$uibModal',
+    '$interval',
     'toastr',
     NodesCtrl
   ]

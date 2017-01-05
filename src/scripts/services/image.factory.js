@@ -1,4 +1,6 @@
 function ImageFactory($http) {
+  const SERVER = '/api';
+
   function getList() {
     return $http.get(SERVER + '/images').then(function(images) {
       return images.data;
@@ -6,7 +8,10 @@ function ImageFactory($http) {
   }
 
   function getImageName(imageData) {
-    return imageData.RepoTags.length ? imageData.RepoTags[0].split(':')[0] : 'Untagged';
+    let name = imageData.RepoTags[0].split(':');
+    name.pop();
+    name = name.join(':');
+    return imageData.RepoTags.length ? name : 'Untagged';
   }
 
   function getImageDate(imageData) {
@@ -29,14 +34,19 @@ function ImageFactory($http) {
     return (imageData.VirtualSize / 1000) / 1000;
   }
 
-  var SERVER = '/api';
+
+  function getImageInspectData (id) {
+    return $http.get(`${SERVER}/images/${id}`).then(response => response.data);
+  }
+
 
   return {
     getList: getList,
     getImageName: getImageName,
     getImageDate: getImageDate,
     getImageTags: getImageTags,
-    getImageSize: getImageSize
+    getImageSize: getImageSize,
+    getImageInspectData: getImageInspectData
   };
 };
 

@@ -1,35 +1,39 @@
-<div class="col-md-2">
+<div class="col-md-12">
     <div class="panel">
-        <div class="panel-heading">
+        <div class="panel-heading collapse-toggler" ng-click="containers.isSearchCollapsed = !containers.isSearchCollapsed">
             <h1 class="panel-title">
-        Search
-      </h1>
+                <span>
+                    <i class="glyphicon glyphicon-minus" ng-if="!containers.isSearchCollapsed"></i>
+                    <i class="glyphicon glyphicon-plus" ng-if="containers.isSearchCollapsed"></i>
+                </span>
+                Search
+            </h1>
         </div>
-        <div class="panel-body">
-            <div class="form-group">
+        <div class="panel-body" uib-collapse="containers.isSearchCollapsed">
+            <div class="form-group col-xs-6 col-sm-3 col-md-2">
                 <label class="control-label"> Name </label>
-                <input type="text" class="form-control input-sm" ng-model="keyword.name" />
+                <input type="text" class="form-control input-sm" ng-model="containers.keyword.name" />
             </div>
-            <div class="form-group">
+            <div class="form-group col-xs-6 col-sm-3 col-md-2">
                 <label class="control-label"> Node </label>
-                <input type="text" class="form-control input-sm" ng-model="keyword.node" />
+                <input type="text" class="form-control input-sm" ng-model="containers.keyword.node" />
             </div>
-            <div class="form-group">
+            <div class="form-group col-xs-6 col-sm-3 col-md-2">
                 <label class="control-label"> Image </label>
-                <input type="text" class="form-control input-sm" ng-model="keyword.image" />
+                <input type="text" class="form-control input-sm" ng-model="containers.keyword.image" />
             </div>
-            <div class="form-group">
+            <div class="form-group col-xs-6 col-sm-3 col-md-2">
                 <label class="control-label"> Created </label>
-                <input type="text" class="form-control input-sm" ng-model="keyword.created" />
+                <input type="text" class="form-control input-sm" ng-model="containers.keyword.created" />
             </div>
-            <div class="form-group">
+            <div class="form-group col-xs-6 col-sm-3 col-md-2">
                 <label class="control-label"> Status </label>
-                <input type="text" class="form-control input-sm" ng-model="keyword.status" />
+                <input type="text" class="form-control input-sm" ng-model="containers.keyword.status" />
             </div>
         </div>
     </div>
 </div>
-<div class="col-md-10">
+<div class="col-md-12">
     <table ng-show="containers" class="table table-striped">
         <thead>
             <tr>
@@ -38,26 +42,23 @@
                 <th> Image </th>
                 <th> Created </th>
                 <th> Status </th>
-                <th> Inspect </th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="container in containers.containers | filter: {Name: keyword.name, Node: keyword.node, Image: keyword.image, Created: keyword.created, Status: keyword.status }">
+            <tr ng-repeat="container in containers.containers | filter: {Name: containers.keyword.name, Node: containers.keyword.node, Image: containers.keyword.image, Created: containers.keyword.created, Status: containers.keyword.status }">
                 <td>
-                    {{container.Name}}
+                    <a class="btn btn-default btn-xs" ng-click="containers.displayContainerDetail(container.Id)">
+                        {{container.Name}}
+                    </a>
                 </td>
                 <td>
-                    {{container.Node}}
-                    <a class="btn btn-default btn-xs pull-right" ng-click="containers.displayNodeDetail(container.Node)">
-                        <i class="glyphicon glyphicon-info-sign"></i>
+                    <a class="btn btn-default btn-xs" ng-click="containers.displayNodeDetail(container.Node)">
+                        {{container.Node}}
                     </a>
                 </td>
                 <td>{{container.Image}}</td>
                 <td>{{container.Created}}</td>
                 <td>{{container.Status}}</td>
-                <td>
-                    <a class="btn btn-info btn-xs" ng-click="containers.displayContainerDetail(container.Id)"><i class="glyphicon glyphicon-info-sign"></i> Details</a>
-                </td>
             </tr>
         </tbody>
     </table>

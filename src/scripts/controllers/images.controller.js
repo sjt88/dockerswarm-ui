@@ -1,39 +1,52 @@
 'use strict';
 
-function ImagesCtrl(ImageFactory, $scope) {
+import imageDetailTemplate from '../../views/images-detail.template.html';
 
-  $scope.imagesAvailable = function() {
-    return $scope.imageData.length > 0;
+function ImagesCtrl(ImageFactory, ErrorsService, $scope, $uibModal) {
+
+  let vm = this;
+  vm.images = [];
+  vm.keyword = {};
+
+  vm.imagesAvailable = function() {
+    return vm.imageData.length > 0;
   };
 
-  $scope.imageData = [];
+  vm.imageData = [];
 
-  ImageFactory.getList().then(function(images) {
-    console.log('got images:');
-    console.log(images);
-    $scope.imageData = images.map(function(image, index) {
+  function formatImageData (images) {
+    return images.map((image, index) => {
       return {
         created: ImageFactory.getImageDate(image),
         tags: ImageFactory.getImageTags(image),
         name: ImageFactory.getImageName(image),
-        size: ImageFactory.getImageSize(image)
+        size: ImageFactory.getImageSize(image),
+        id: image.RepoTags[0]
       };
     });
-    console.log($scope.imageData);
+  }
 
-  }, function() {
-    toastr.error('Server is not responding', 'DockerSwarm UI');
-  });
+  function openImageDetailModal (data) {
+    return $uibModal.open({
+      animation: true,
+      templateUrl:imageDetailTemplate,
+      controller: 'imageDetailCtrl as imageDetails',
+      size: 'lg',
+      resolve: {
+        image: data
+      }
+    });
+  }
 
-  $scope.keyword = {};
-
-  $scope.open = function() {
-    $scope.popup.opened = true;
+  vm.displayImageDetail = imageTag => {
+    ImageFactory.getImageInspectData(imageTag)
+      .then(openImageDetailModal)
+      .catch(ErrorsService.throw);
   };
 
-  $scope.popup = {
-    opened: false
-  };
+  ImageFactory.getList()
+    .then(images => vm.imageData = formatImageData(images))
+    .catch(() => toastr.error('Server is not responding', 'DockerSwarm UI'));
 };
 
 

@@ -24,6 +24,9 @@ function config($urlRouterProvider, $stateProvider, $locationProvider) {
     {
       name: 'containers',
       url: '/containers',
+      params: {
+        node: null
+      },
       templateUrl: containersTemplate,
       controller: 'ContainersCtrl as containers'
     },

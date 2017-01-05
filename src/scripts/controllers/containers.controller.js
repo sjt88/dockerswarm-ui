@@ -4,11 +4,15 @@
 import nodeDetailTemplate      from '../../views/node-detail.template.html';
 import containerDetailTemplate from '../../views/container-detail.template.html';
 
-function ContainersCtrl(ErrorsService, DockerService, ContainerService, $uibModal, $scope, $q, toastr) {
+function ContainersCtrl($stateParams, ErrorsService, DockerService, ContainerService, $uibModal, $scope, $q, toastr) {
   console.log('containers controller');
 
   var vm = this;
-
+  vm.isSearchCollapsed = true;
+  vm.keyword = {
+    node: $stateParams.node || ''
+  };
+  
   vm.displayNodeDetail = nodeName => {
     var detailModal = $uibModal.open({
       animation: true,
@@ -18,7 +22,8 @@ function ContainersCtrl(ErrorsService, DockerService, ContainerService, $uibModa
       resolve: {
         node: function() {
           console.log('opening info for node:', nodeName);
-          return DockerService.getNodes().then(nodes => {
+          return DockerService.updateInfo().then(() => {
+            let nodes = DockerService.store.SystemStatus.nodes;
             console.log('nodes:', nodes);
             console.log('nodeName: ' + nodeName);
             let filtered = nodes.find(node => node.name == nodeName);

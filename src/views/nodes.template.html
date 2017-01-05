@@ -1,43 +1,47 @@
-<div class="col-md-2">
+<div class="col-md-12">
     <div class="panel filter-panel">
-    <div class="panel-heading">
-      <h1 class="panel-title">
-        Search
-      </h1>
-    </div>
-        <div class="panel-body">
-            <div class="form-group">
+        <div class="panel-heading collapse-toggler" ng-click="nodes.isSearchCollapsed = !nodes.isSearchCollapsed">
+            <h1 class="panel-title">
+                <span>
+                    <i class="glyphicon glyphicon-minus" ng-if="!nodes.isSearchCollapsed"></i>
+                    <i class="glyphicon glyphicon-plus" ng-if="nodes.isSearchCollapsed"></i>
+                </span>
+                Search
+            </h1>
+        </div>
+        <div class="panel-body collapse" uib-collapse="nodes.isSearchCollapsed">
+            <div class="form-group col-xs-6 col-sm-3 col-md-2">
                 <label class="control-label"> Status </label>
-                <input type="text" class="form-control input-sm" ng-model="keyword.status" />
+                <input type="text" class="form-control input-sm" ng-model="nodes.keyword.status" />
             </div>
-            <div class="form-group">
+            <div class="form-group col-xs-6 col-sm-3 col-md-2">
                 <label class="control-label"> Name </label>
-                <input type="text" class="form-control input-sm" ng-model="keyword.name" />
+                <input type="text" class="form-control input-sm" ng-model="nodes.keyword.name" />
             </div>
-            <div class="form-group">
+            <div class="form-group col-xs-6 col-sm-3 col-md-2">
                 <label class="control-label"> Host </label>
-                <input type="text" class="form-control input-sm" ng-model="keyword.host" />
+                <input type="text" class="form-control input-sm" ng-model="nodes.keyword.host" />
             </div>
-            <div class="form-group">
+            <div class="form-group col-xs-6 col-sm-3 col-md-2">
                 <label class="control-label"> Containers </label>
-                <input type="text" class="form-control input-sm" ng-model="keyword.containers" />
+                <input type="text" class="form-control input-sm" ng-model="nodes.keyword.containers" />
             </div>
-            <div class="form-group">
+            <div class="form-group col-xs-6 col-sm-3 col-md-2">
                 <label class="control-label"> CPU </label>
-                <input type="text" class="form-control input-sm" ng-model="keyword.cpu" />
+                <input type="text" class="form-control input-sm" ng-model="nodes.keyword.cpu" />
             </div>
-            <div class="form-group">
+            <div class="form-group col-xs-6 col-sm-3 col-md-2">
                 <label class="control-label"> Reserved Memory </label>
-                <input type="text" class="form-control input-sm" ng-model="keyword.memory" />
+                <input type="text" class="form-control input-sm" ng-model="nodes.keyword.memory" />
             </div>
-            <div class="form-group">
+            <div class="form-group col-xs-6 col-sm-3 col-md-2">
                 <label class="control-label"> Update at </label>
-                <input type="text" class="form-control input-sm" ng-model="keyword.update" />
+                <input type="text" class="form-control input-sm" ng-model="nodes.keyword.update" />
             </div>
         </div>
     </div>
 </div>
-<div class="col-md-10">
+<div class="col-md-12">
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
@@ -48,31 +52,35 @@
                 <th>CPU</th>
                 <th>Reserved Memory</th>
                 <th>Updated at</th>
-                <th>Inspect</th>
             </tr>
         </thead>
         <tbody ng-show="nodes.nodes.length > 0">
             <tr ng-repeat="node in nodes.nodes | filter: {
-              status:     keyword.status,
-              name:       keyword.name,
-              host:       keyword.host,
-              containers: keyword.containers,
-              cpu:        keyword.cpu,
-              memory:     keyword.memory,
-              update:     keyword.update
+              status:     nodes.keyword.status,
+              name:       nodes.keyword.name,
+              host:       nodes.keyword.host,
+              containers: nodes.keyword.containers,
+              cpu:        nodes.keyword.cpu,
+              memory:     nodes.keyword.memory,
+              update:     nodes.keyword.update
             }">
                 <td style="text-align:center">
                     <span ng-class="{label:true, 'label-success': nodes.nodeIsHealthy($index), 'label-danger': !nodes.nodeIsHealthy($index)}">{{node.status}}</span>
                 </td>
-                <td>{{node.name}}</td>
+                <td>
+                    <a class="btn btn-default btn-xs" ng-click="nodes.open($index)">
+                        {{node.name}}
+                    </a>
+                </td>
                 <td>{{node.host}}</td>
-                <td>{{node.containers}}</td>
+                <td>
+                    <a class="btn btn-default btn-xs" ui-sref="containers({node: node.name})">
+                    {{node.containers}}
+                    </a>
+                </td>
                 <td>{{node.cpu}}</td>
                 <td>{{node.memory}}</td>
                 <td>{{node.update}}</td>
-                <td>
-                    <a class="btn btn-info btn-xs" ng-click="nodes.open($index)"><i class="glyphicon glyphicon-info-sign"></i> Details</a>
-                </td>
             </tr>
         </tbody>
     </table>

@@ -1,3 +1,7 @@
 .bg-success {
   @extends: .bg-success;
 }
+
+.collapse-toggler:hover {
+  cursor: pointer;
+}

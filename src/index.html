@@ -7,10 +7,10 @@
 </head>
 
 <body>
-    <navbar-directive></navbar-directive>
-    <div class="container-fluid" ng-app="app">
+    <div ng-app="app">
         <base href="/">
-        <ui-view></ui-view>
+        <navbar-directive></navbar-directive>
+        <ui-view class="container-fluid"></ui-view>
     </div>
 </body>
 
